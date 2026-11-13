@@ -1,0 +1,2558 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Leave Smart | ระบบลาออนไลน์ข้าราชการครูและบุคลากรทางการศึกษา (ตามระเบียบ ก.ค.ศ.)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf.js for Real PDF File Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        thai: {
+                            red: '#ED1C24',
+                            redDark: '#B31217',
+                            redLight: '#FEE2E2',
+                            white: '#FFFFFF',
+                            blue: '#241D4F',
+                            blueMid: '#2D2A6E',
+                            blueLight: '#EEF2FF',
+                            gold: '#F59E0B'
+                        }
+                    },
+                    boxShadow: {
+                        'futuristic': '0 10px 30px -5px rgba(36, 29, 79, 0.08), 0 4px 12px -2px rgba(36, 29, 79, 0.04)',
+                        'glow-blue': '0 0 20px rgba(36, 29, 79, 0.35)',
+                        'glow-red': '0 0 20px rgba(237, 28, 36, 0.35)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #F4F6FB;
+            color: #1E293B;
+        }
+        /* Thai Flag Ribbon Top Bar */
+        .thai-flag-ribbon {
+            height: 6px;
+            background: linear-gradient(90deg, 
+                #ED1C24 0%, #ED1C24 16.66%, 
+                #FFFFFF 16.66%, #FFFFFF 33.33%, 
+                #241D4F 33.33%, #241D4F 66.66%, 
+                #FFFFFF 66.66%, #FFFFFF 83.33%, 
+                #ED1C24 83.33%, #ED1C24 100%);
+        }
+        .thai-flag-vertical {
+            background: linear-gradient(180deg, 
+                #ED1C24 0%, #ED1C24 15%, 
+                #FFFFFF 15%, #FFFFFF 30%, 
+                #241D4F 30%, #241D4F 70%, 
+                #FFFFFF 70%, #FFFFFF 85%, 
+                #ED1C24 85%, #ED1C24 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #241D4F;
+        }
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.03); opacity: 1; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-thai-blue selection:text-white">
+
+    <!-- Top Thai Flag Strip -->
+    <div class="thai-flag-ribbon fixed top-0 left-0 right-0 z-50 shadow-sm"></div>
+
+    <!-- Main Wrapper -->
+    <div class="flex flex-1 pt-[6px]">
+
+        <!-- Sidebar (Desktop & Tablet Landscape) -->
+        <aside class="hidden lg:flex flex-col w-72 bg-thai-blue text-white fixed top-[6px] bottom-0 left-0 z-40 shadow-2xl overflow-y-auto">
+            <!-- Decorative Glow -->
+            <div class="absolute -top-20 -left-20 w-48 h-48 bg-thai-red rounded-full filter blur-3xl opacity-25 pointer-events-none"></div>
+            <div class="absolute bottom-10 -right-16 w-48 h-48 bg-blue-500 rounded-full filter blur-3xl opacity-20 pointer-events-none"></div>
+
+            <!-- Brand Header -->
+            <div class="p-6 flex items-center gap-3.5 border-b border-white/10 relative z-10">
+                <div class="w-12 h-12 rounded-2xl bg-white p-0.5 shadow-lg flex items-center justify-center relative overflow-hidden shrink-0">
+                    <div class="absolute inset-0 thai-flag-vertical opacity-20"></div>
+                    <i class="fa-solid fa-graduation-cap text-2xl text-thai-blue relative z-10"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-xl tracking-tight text-white">T-LEAVE</span>
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-thai-red text-white uppercase tracking-wider">ก.ค.ศ.</span>
+                    </div>
+                    <p class="text-xs text-blue-200 font-light mt-0.5">ระบบลาข้าราชการครูอัจฉริยะ</p>
+                </div>
+            </div>
+
+            <!-- Cloud Storage Status Indicator -->
+            <div class="mx-4 mt-4 px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-400/30 flex items-center justify-between text-xs relative z-10">
+                <div class="flex items-center gap-2">
+                    <span id="cloudStatusDot" class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                    <span id="cloudStatusText" class="text-emerald-200 font-medium">กำลังซิงค์ข้อมูลออนไลน์...</span>
+                </div>
+                <i class="fa-solid fa-cloud-arrow-up text-emerald-300"></i>
+            </div>
+
+            <!-- Active User Card -->
+            <div class="mx-4 my-4 p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 relative z-10">
+                <div class="flex items-center gap-3">
+                    <div class="relative">
+                        <img id="sidebarAvatar" src="https://placehold.co/100x100/ED1C24/FFFFFF?text=ครู" alt="Profile" class="w-12 h-12 rounded-xl object-cover border-2 border-white shadow-md">
+                        <span class="w-3 h-3 rounded-full bg-emerald-400 border-2 border-thai-blue absolute -bottom-1 -right-1"></span>
+                    </div>
+                    <div class="overflow-hidden">
+                        <h3 id="sidebarName" class="font-semibold text-sm truncate">ยังไม่ได้เลือกบุคลากร</h3>
+                        <p id="sidebarPosition" class="text-xs text-blue-200 truncate">กรุณาเพิ่มรายชื่อที่เมนูบุคลากร</p>
+                        <span id="sidebarDept" class="inline-block mt-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-md text-white">โรงเรียนบึงงามพัฒนา</span>
+                    </div>
+                </div>
+                <!-- Role Switcher for Demo -->
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                    <span class="text-blue-200"><i class="fa-solid fa-repeat mr-1"></i> โหมดทดลอง:</span>
+                    <button onclick="toggleRole()" id="roleToggleBtn" class="bg-thai-red hover:bg-red-600 text-white font-medium px-2.5 py-1 rounded-lg transition shadow-sm flex items-center gap-1">
+                        <span>มุมมองครูผู้สอน</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="flex-1 px-4 space-y-1.5 relative z-10">
+                <p class="px-3 text-[11px] font-semibold uppercase tracking-wider text-blue-300/70 mb-2">เมนูหลัก</p>
+                
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium transition-all bg-white text-thai-blue shadow-lg">
+                    <i class="fa-solid fa-chart-pie text-lg w-5 text-center text-thai-red"></i>
+                    <span>แดชบอร์ดอัจฉริยะ</span>
+                </button>
+
+                <button onclick="switchTab('request')" id="nav-request" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-blue-100 hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-paper-plane text-lg w-5 text-center"></i>
+                    <span>ยื่นใบลาออนไลน์</span>
+                    <span class="ml-auto bg-thai-red text-white text-[10px] px-2 py-0.5 rounded-full">ด่วน</span>
+                </button>
+
+                <button onclick="switchTab('history')" id="nav-history" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-blue-100 hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-clock-rotate-left text-lg w-5 text-center"></i>
+                    <span>ประวัติและติดตามใบลา</span>
+                </button>
+
+                <button onclick="switchTab('approval')" id="nav-approval" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-blue-100 hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-file-signature text-lg w-5 text-center"></i>
+                    <span>อนุมัติการลา (ผอ./หัวหน้า)</span>
+                    <span id="pendingBadgeSidebar" class="ml-auto bg-amber-400 text-thai-blue font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+                </button>
+
+                <button onclick="switchTab('staff')" id="nav-staff" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-blue-100 hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-users-gear text-lg w-5 text-center"></i>
+                    <span>จัดการรายชื่อบุคลากร</span>
+                    <span id="staffCountBadge" class="ml-auto bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full">0</span>
+                </button>
+
+                <button onclick="switchTab('rules')" id="nav-rules" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-blue-100 hover:bg-white/10 transition-all">
+                    <i class="fa-solid fa-scale-balanced text-lg w-5 text-center"></i>
+                    <span>ระเบียบการลา ก.ค.ศ.</span>
+                </button>
+            </nav>
+
+            <!-- Fiscal Year Info Footer -->
+            <div class="p-4 m-4 rounded-2xl bg-gradient-to-br from-thai-blueMid to-indigo-950 border border-white/10 text-xs space-y-2 relative z-10">
+                <div class="flex items-center justify-between">
+                    <span class="text-blue-200">ปีงบประมาณ</span>
+                    <span class="font-bold text-white bg-thai-red/90 px-2 py-0.5 rounded-md">พ.ศ. 2570</span>
+                </div>
+                <p class="text-[11px] text-blue-200/80 leading-relaxed">
+                    รอบการประเมิน: 1 ต.ค. 2569 – 30 ก.ย. 2570 (ตามระเบียบสำนักนายกรัฐมนตรี และ ก.ค.ศ.)
+                </p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 lg:ml-72 flex flex-col min-w-0 pb-24 lg:pb-10">
+            
+            <!-- Top Header Bar -->
+            <header class="sticky top-[6px] z-30 glass-card border-b border-slate-200/80 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                    <!-- Mobile Brand Icon -->
+                    <div class="lg:hidden w-10 h-10 rounded-xl bg-thai-blue text-white flex items-center justify-center shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-thai-red"></div>
+                        <i class="fa-solid fa-graduation-cap text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 id="pageTitle" class="text-lg sm:text-xl font-bold text-thai-blue">แดชบอร์ดสรุปสิทธิการลา</h1>
+                            <span class="hidden sm:inline-flex items-center gap-1 text-xs font-medium px-2.5 py-0.5 rounded-full bg-thai-blueLight text-thai-blue border border-indigo-200">
+                                <span class="w-2 h-2 rounded-full bg-thai-red animate-ping"></span>
+                                โรงเรียนบึงงามพัฒนา
+                            </span>
+                        </div>
+                        <p id="currentDateDisplay" class="text-xs text-slate-500">วันศุกร์ที่ 13 พฤศจิกายน พ.ศ. 2569 | โรงเรียนบึงงามพัฒนา (ปีงบประมาณ 2570)</p>
+                    </div>
+                </div>
+
+                <!-- Right Header Actions -->
+                <div class="flex items-center gap-2.5 sm:gap-4">
+                    <!-- Mobile Role Toggle -->
+                    <button onclick="toggleRole()" class="lg:hidden text-xs bg-thai-blue text-white px-3 py-2 rounded-xl font-medium flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-user-shield text-thai-red"></i>
+                        <span id="mobileRoleLabel">โหมด: ครู</span>
+                    </button>
+
+                    <!-- Quick New Leave Button -->
+                    <button onclick="switchTab('request')" class="hidden sm:flex items-center gap-2 bg-gradient-to-r from-thai-red to-red-600 hover:from-red-600 hover:to-thai-redDark text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-md hover:shadow-glow-red transition-all">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>เขียนใบลาใหม่</span>
+                    </button>
+
+                    <!-- Notification Bell -->
+                    <button onclick="showToast('ระบบพร้อมใช้งานจริง: กรุณาเพิ่มรายชื่อบุคลากรในเมนูจัดการรายชื่อบุคลากรเพื่อเริ่มต้นใช้งาน', 'info')" class="relative w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-thai-blue flex items-center justify-center transition">
+                        <i class="fa-regular fa-bell text-lg"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Container -->
+            <main class="p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+                <!-- ==========================================
+                     TAB 1: DASHBOARD (แดชบอร์ดอัจฉริยะ)
+                     ========================================== -->
+                <section id="tab-dashboard" class="space-y-6">
+                    
+                    <!-- Hero Banner in Thai Flag Theme -->
+                    <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-thai-blue via-thai-blueMid to-indigo-900 text-white p-6 sm:p-8 shadow-futuristic">
+                        <!-- Thai Flag Graphic Accent -->
+                        <div class="absolute top-0 right-0 bottom-0 w-32 sm:w-64 opacity-15 pointer-events-none overflow-hidden">
+                            <div class="w-full h-full thai-flag-vertical transform -skew-x-12 translate-x-10"></div>
+                        </div>
+                        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                            <div class="space-y-2 max-w-2xl">
+                                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-medium">
+                                    <span class="w-2 h-2 rounded-full bg-thai-red"></span>
+                                    <span>อ้างอิงระเบียบ ก.ค.ศ. ว่าด้วยการลาของข้าราชการครูและบุคลากรทางการศึกษา</span>
+                                </div>
+                                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">ยินดีต้อนรับสู่ระบบลา <span id="heroTeacherName">โรงเรียนบึงงามพัฒนา</span> 👋</h2>
+                                <p class="text-blue-100 text-sm sm:text-base font-light leading-relaxed">
+                                    สถานะการปฏิบัติราชการปีงบประมาณ 2570 ของคุณอยู่ในเกณฑ์ <strong class="text-emerald-300 font-semibold">ปกติ (ยังไม่มีประวัติการลา)</strong> สามารถเริ่มต้นเพิ่มรายชื่อครูและยื่นใบลาออนไลน์ได้ทันที
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+                                <button onclick="switchTab('request')" class="flex-1 sm:flex-initial bg-thai-red hover:bg-red-600 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-lg hover:shadow-glow-red transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                    <span>ยื่นใบลาทันที</span>
+                                </button>
+                                <button onclick="switchTab('staff')" class="flex-1 sm:flex-initial bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-medium px-5 py-3.5 rounded-2xl border border-white/20 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-users-gear"></i>
+                                    <span>จัดการชื่อครู</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards: Leave Quotas (4 Core Categories) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+                        
+                        <!-- Card 1: ลาป่วย -->
+                        <div class="bg-white rounded-2xl p-5 shadow-futuristic border-t-4 border-thai-red hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-thai-red bg-thai-redLight px-2.5 py-1 rounded-lg">ลาป่วย (Sick Leave)</span>
+                                    <h3 class="text-3xl font-bold text-thai-blue mt-3"><span id="statSickUsed">0</span> <span class="text-sm font-normal text-slate-500">/ 60 วันทำการ</span></h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-red-50 text-thai-red flex items-center justify-center text-xl shadow-inner">
+                                    <i class="fa-solid fa-Suitcase-medical fa-briefcase-medical"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-slate-500 mb-1.5">
+                                    <span>ใช้ไป <span id="statSickCount">0</span> ครั้ง</span>
+                                    <span class="font-medium text-thai-blue">คงเหลือปกติ <span id="statSickRemain">60</span> วัน</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="barSick" class="h-full bg-thai-red rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-2.5 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-info text-thai-red"></i> ตั้งแต่ 30 วันขึ้นไป ต้องมีใบรับรองแพทย์
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: ลากิจส่วนตัว -->
+                        <div class="bg-white rounded-2xl p-5 shadow-futuristic border-t-4 border-thai-blue hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-thai-blue bg-thai-blueLight px-2.5 py-1 rounded-lg">ลากิจส่วนตัว</span>
+                                    <h3 class="text-3xl font-bold text-thai-blue mt-3"><span id="statPersonalUsed">0</span> <span class="text-sm font-normal text-slate-500">/ 45 วันทำการ</span></h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-thai-blue flex items-center justify-center text-xl shadow-inner">
+                                    <i class="fa-solid fa-user-clock"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-slate-500 mb-1.5">
+                                    <span>ใช้ไป <span id="statPersonalCount">0</span> ครั้ง</span>
+                                    <span class="font-medium text-thai-blue">คงเหลือ <span id="statPersonalRemain">45</span> วัน</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="barPersonal" class="h-full bg-thai-blue rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-2.5 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check text-emerald-600"></i> ต้องได้รับอนุมัติจากผู้บังคับบัญชาก่อนหยุด
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: เกณฑ์พิจารณาเลื่อนเงินเดือน ก.ค.ศ. -->
+                        <div class="bg-white rounded-2xl p-5 shadow-futuristic border-t-4 border-indigo-500 hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg">โควตาเลื่อนขั้น (ป่วย+กิจ)</span>
+                                    <h3 class="text-3xl font-bold text-thai-blue mt-3"><span id="statPromoDays">0</span> <span class="text-sm font-normal text-slate-500">/ 23 วัน</span></h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl shadow-inner">
+                                    <i class="fa-solid fa-award"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-slate-500 mb-1.5">
+                                    <span>จำนวนครั้งรวม: <strong id="statPromoTimes" class="text-thai-blue">0 / 6 ครั้ง</strong></span>
+                                    <span class="text-emerald-600 font-semibold">อยู่ในเกณฑ์ปกติ</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div id="barPromo" class="h-full bg-gradient-to-r from-thai-blue to-thai-red rounded-full transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-2.5 flex items-center gap-1">
+                                    <i class="fa-solid fa-shield-halved text-thai-blue"></i> ก.ค.ศ. กำหนดครึ่งปีไม่เกิน 6 ครั้ง / 23 วันทำการ
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: ลาคลอด / พักผ่อน / พิเศษ -->
+                        <div class="bg-white rounded-2xl p-5 shadow-futuristic border-t-4 border-emerald-500 hover:-translate-y-1 transition duration-300 relative overflow-hidden">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">การลาคลอด/ช่วยเหลือบุตร</span>
+                                    <h3 class="text-2xl font-bold text-thai-blue mt-3">90 / 15 <span class="text-sm font-normal text-slate-500">วัน</span></h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl shadow-inner">
+                                    <i class="fa-solid fa-Hands-holding-child fa-baby-carriage"></i>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <div class="flex justify-between text-xs text-slate-500 mb-1.5">
+                                    <span>สายงานการสอน (มีปิดเทอม)</span>
+                                    <span class="font-medium text-emerald-600">ตามสิทธิ์ ก.ค.ศ.</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 rounded-full" style="width: 100%"></div>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mt-2.5 flex items-center gap-1">
+                                    <i class="fa-solid fa-calendar-check text-emerald-600"></i> ครูผู้สอนใช้สิทธิ์หยุดช่วงปิดภาคเรียนแทนลาพักผ่อน
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Middle Row: Analytics Chart + Live School Status -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        
+                        <!-- Left 2 Cols: Monthly Leave Statistics & Circular Gauge -->
+                        <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-5 border-b border-slate-100">
+                                <div>
+                                    <h3 class="font-bold text-thai-blue text-lg flex items-center gap-2">
+                                        <span class="w-2.5 h-6 rounded-full bg-thai-red inline-block"></span>
+                                        สถิติการลารายเดือน และดัชนีมาปฏิบัติราชการ
+                                    </h3>
+                                    <p class="text-xs text-slate-500 mt-0.5">เปรียบเทียบข้อมูลการลาป่วย ลากิจ และไปราชการ ในปีงบประมาณ 2570</p>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs">
+                                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-thai-red inline-block"></span> ลาป่วย</span>
+                                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-thai-blue inline-block"></span> ลากิจ</span>
+                                    <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm bg-amber-400 inline-block"></span> ไปราชการ</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 items-center">
+                                <!-- Circular Score Gauge -->
+                                <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-gradient-to-b from-slate-50 to-indigo-50/40 border border-slate-100">
+                                    <div class="relative w-36 h-36 flex items-center justify-center">
+                                        <svg class="w-full h-full -rotate-90" viewBox="0 0 120 120">
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="#E2E8F0" stroke-width="10"></circle>
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="#241D4F" stroke-width="10" stroke-dasharray="314" stroke-dashoffset="0" stroke-linecap="round"></circle>
+                                        </svg>
+                                        <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+                                            <span class="text-2xl font-bold text-thai-blue">100%</span>
+                                            <span class="text-[10px] text-slate-500">เวลามาปฏิบัติงาน</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <span class="inline-block text-xs font-semibold text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">ไม่เคยขาดราชการ / ไม่มาสาย</span>
+                                        <p class="text-[11px] text-slate-500 mt-1.5">พร้อมส่งข้อมูลเชื่อมระบบ DPA / ก.ค.ศ.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Bar Chart Visual (Oct - Mar) -->
+                                <div class="md:col-span-2 flex flex-col justify-between h-52 pt-4 px-2">
+                                    <div class="flex items-end justify-between gap-2 sm:gap-4 h-40 border-b border-slate-200 pb-2 px-2">
+                                        <!-- ต.ค. -->
+                                        <div class="flex-1 flex flex-col items-center gap-1 group">
+                                            <div class="w-full flex justify-center items-end gap-1 h-32">
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                            </div>
+                                        </div>
+                                        <!-- พ.ย. -->
+                                        <div class="flex-1 flex flex-col items-center gap-1 group">
+                                            <div class="w-full flex justify-center items-end gap-1 h-32">
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                            </div>
+                                        </div>
+                                        <!-- ธ.ค. -->
+                                        <div class="flex-1 flex flex-col items-center gap-1 group">
+                                            <div class="w-full flex justify-center items-end gap-1 h-32">
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                            </div>
+                                        </div>
+                                        <!-- ก.พ. -->
+                                        <div class="flex-1 flex flex-col items-center gap-1 group">
+                                            <div class="w-full flex justify-center items-end gap-1 h-32">
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                            </div>
+                                        </div>
+                                        <!-- มี.ค. -->
+                                        <div class="flex-1 flex flex-col items-center gap-1 group">
+                                            <div class="w-full flex justify-center items-end gap-1 h-32">
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                                <div class="w-3 bg-slate-200 rounded-t-md" style="height: 8%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-slate-500 px-4 pt-2 font-medium">
+                                        <span>ต.ค. 69</span>
+                                        <span class="text-thai-red font-bold">พ.ย. 69</span>
+                                        <span>ธ.ค. 69</span>
+                                        <span>ม.ค. 70</span>
+                                        <span>ก.พ. 70</span>
+                                        <span>มี.ค. 70</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right 1 Col: Today's Teachers on Leave & Substitute Alert -->
+                        <div class="bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                                    <h3 class="font-bold text-thai-blue text-base flex items-center gap-2">
+                                        <i class="fa-solid fa-chalkboard-user text-thai-red"></i>
+                                        ครูที่ลา / สอนแทนวันนี้
+                                    </h3>
+                                    <span id="todayLeaveCountBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">0 ท่าน</span>
+                                </div>
+
+                                <div id="todayLeaveListContainer" class="space-y-3.5 mt-4">
+                                    <!-- Populated dynamically from real leaveRecords -->
+                                </div>
+                            </div>
+
+                            <div class="mt-5 pt-4 border-t border-slate-100">
+                                <button onclick="switchTab('request')" class="w-full py-2.5 px-4 rounded-xl bg-thai-blueLight hover:bg-indigo-100 text-thai-blue font-semibold text-xs transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-plus-circle text-thai-red"></i>
+                                    <span>ไปที่หน้าเขียนใบลาออนไลน์</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Recent Leave Requests Table Preview -->
+                    <div class="bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="font-bold text-thai-blue text-lg flex items-center gap-2">
+                                    <span class="w-2.5 h-6 rounded-full bg-thai-blue inline-block"></span>
+                                    รายการใบลาล่าสุดของคุณ
+                                </h3>
+                                <p class="text-xs text-slate-500">ตรวจสอบสถานะการลงนามตามลำดับขั้น (ครูสอนแทน ➔ หัวหน้ากลุ่มสาระฯ ➔ ผู้อำนวยการสถานศึกษา)</p>
+                            </div>
+                            <button onclick="switchTab('history')" class="text-xs font-semibold text-thai-red hover:underline flex items-center gap-1">
+                                <span>ดูทั้งหมด</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-[11px] uppercase tracking-wider text-slate-400">
+                                        <th class="py-3 px-3">เลขที่ใบลา</th>
+                                        <th class="py-3 px-3">ประเภทการลา</th>
+                                        <th class="py-3 px-3">วันที่ลา</th>
+                                        <th class="py-3 px-3">จำนวนวัน</th>
+                                        <th class="py-3 px-3">ครูสอนแทน</th>
+                                        <th class="py-3 px-3">สถานะการอนุมัติ</th>
+                                        <th class="py-3 px-3 text-right">ใบลา ই-Form</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboardRecentTable" class="divide-y divide-slate-100 text-sm">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ==========================================
+                     TAB 2: SUBMIT LEAVE REQUEST (ยื่นใบลาออนไลน์)
+                     ========================================== -->
+                <section id="tab-request" class="hidden space-y-6">
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left 2 Cols: Smart Leave Form -->
+                        <div class="lg:col-span-2 bg-white rounded-3xl shadow-futuristic border border-slate-100 overflow-hidden">
+                            <!-- Form Top Thai Ribbon -->
+                            <div class="thai-flag-ribbon"></div>
+                            <div class="p-6 sm:p-8">
+                                <div class="flex items-center justify-between pb-5 border-b border-slate-100">
+                                    <div>
+                                        <span class="text-xs font-bold text-thai-red uppercase tracking-wider">แบบใบลาอิเล็กทรอนิกส์ (ตามแบบ ก.ค.ศ.)</span>
+                                        <h2 class="text-xl sm:text-2xl font-bold text-thai-blue mt-1">เขียนใบลาข้าราชการครูและบุคลากรทางการศึกษา</h2>
+                                    </div>
+                                    <div class="hidden sm:flex flex-col items-end text-xs text-slate-500">
+                                        <span>เขียนที่: โรงเรียนบึงงามพัฒนา</span>
+                                        <span class="font-medium text-thai-blue">เรียน: ผู้อำนวยการโรงเรียนบึงงามพัฒนา (นายวรายุท โพธิ์ลา)</span>
+                                    </div>
+                                </div>
+
+                                <form id="leaveForm" onsubmit="submitLeaveForm(event)" class="space-y-5 mt-6">
+                                    
+                                    <!-- 0. Applicant Selector (เลือกผู้ยื่นใบลา) -->
+                                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                        <div>
+                                            <label class="block text-xs font-bold text-thai-blue uppercase tracking-wider">ผู้ยื่นใบลา (เลือกสลับรายชื่อครู หรือเพิ่มที่เมนูบุคลากร)</label>
+                                            <p id="applicantInfoText" class="text-xs text-slate-500 mt-0.5">ครูชำนาญการพิเศษ (คศ.3) • กลุ่มสาระฯ วิทยาศาสตร์และเทคโนโลยี</p>
+                                        </div>
+                                        <div class=" flex items-center gap-2">
+                                            <select id="applicantSelect" onchange="handleApplicantChange()" class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-sm font-semibold text-thai-blue focus:border-thai-red outline-none">
+                                                <!-- Populated dynamically by JS -->
+                                            </select>
+                                            <button type="button" onclick="switchTab('staff')" class="px-3 py-2 rounded-xl bg-thai-blue text-white text-xs font-medium hover:bg-thai-red transition shrink-0" title="เพิ่ม/แก้ไขรายชื่อครู">
+                                                <i class="fa-solid fa-user-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- 1. Leave Type Selector -->
+                                    <div>
+                                        <label class="block text-sm font-semibold text-thai-blue mb-2">
+                                            1. เลือกประเภทการลา <span class="text-thai-red">*</span>
+                                        </label>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            <select id="leaveType" onchange="handleLeaveTypeChange()" required class="col-span-1 sm:col-span-2 w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium text-thai-blue focus:bg-white focus:border-thai-blue focus:ring-2 focus:ring-thai-blue/20 outline-none transition">
+                                                <option value="ลาป่วย">1. ลาป่วย (ไม่เกิน 60 วันทำการ/ปี)</option>
+                                                <option value="ลากิจส่วนตัว">2. ลากิจส่วนตัว (ไม่เกิน 45 วันทำการ/ปี - เริ่มปีแรก 15 วัน)</option>
+                                                <option value="ลาคลอดบุตร">3. ลาคลอดบุตร (ครั้งละ 90 วัน ไม่ต้องมีใบรับรองแพทย์)</option>
+                                                <option value="ลาไปช่วยเหลือภริยาที่คลอดบุตร">4. ลาไปช่วยเหลือภริยาที่คลอดบุตร (ไม่เกิน 15 วันทำการ)</option>
+                                                <option value="ลาพักผ่อน">5. ลาพักผ่อน (เฉพาะตำแหน่งที่มีสิทธิ์สะสมวันลาพักผ่อน)</option>
+                                                <option value="ลาอุปสมบทหรือประกอบพิธีฮัจย์">6. ลาอุปสมบท หรือลาไปประกอบพิธีฮัจย์ (ไม่เกิน 120 วัน)</option>
+                                                <option value="ลาศึกษาต่อ/ฝึกอบรม/ดูงาน">7. ลาไปศึกษา ฝึกอบรม ปฏิบัติการวิจัย หรือดูงาน</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Dynamic Regulation Banner based on Leave Type -->
+                                        <div id="regulationHintBox" class="mt-3 p-4 rounded-2xl bg-thai-blueLight border border-indigo-200 flex items-start gap-3">
+                                            <i class="fa-solid fa-scale-balanced text-thai-blue text-lg mt-0.5"></i>
+                                            <div class="text-xs text-slate-700 leading-relaxed" id="regulationHintText">
+                                                <strong>ระเบียบ ก.ค.ศ. (ลาป่วย):</strong> ส่งใบลาเมื่อมาทำงานวันแรกได้ แต่หากลาป่วยตั้งแต่ <strong>30 วันขึ้นไป</strong> ต้องมีใบรับรองแพทย์แนบ (กรณีไม่ถึง 30 วัน ผอ.อาจสั่งให้แสดงใบรับรองแพทย์ได้ตามเห็นสมควร)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. Dates & Duration -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold text-thai-blue mb-1.5">ตั้งแต่วันที่ <span class="text-thai-red">*</span></label>
+                                            <input type="date" id="startDate" required onchange="calculateDays()" value="2026-11-16" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-thai-blue outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-thai-blue mb-1.5">ถึงวันที่ <span class="text-thai-red">*</span></label>
+                                            <input type="date" id="endDate" required onchange="calculateDays()" value="2026-11-17" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-thai-blue outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-thai-blue mb-1.5">รูปแบบช่วงเวลา</label>
+                                            <select id="leavePeriod" onchange="calculateDays()" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-thai-blue outline-none bg-white">
+                                                <option value="full">เต็มวัน (08:30 - 16:30 น.)</option>
+                                                <option value="morning">ครึ่งวันเช้า (08:30 - 12:00 น.)</option>
+                                                <option value="afternoon">ครึ่งวันบ่าย (13:00 - 16:30 น.)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Calculated Working Days Pill -->
+                                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2 text-sm text-thai-blue font-medium">
+                                            <i class="fa-regular fa-calendar-check text-thai-red"></i>
+                                            <span>คำนวณวันทำการสุทธิ (หักเสาร์-อาทิตย์อัตโนมัติ):</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span id="calculatedDaysBadge" class="text-lg font-bold text-white bg-thai-blue px-4 py-1 rounded-xl shadow-sm">2 วันทำการ</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 3. Reason & Contact -->
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-semibold text-thai-blue mb-1.5">เนื่องจาก (ระบุสาเหตุการลา) <span class="text-thai-red">*</span></label>
+                                            <textarea id="leaveReason" rows="3" required placeholder="ระบุสาเหตุการลา..." class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:border-thai-blue outline-none"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-semibold text-thai-blue mb-1.5">ในระหว่างลาจะติดต่อข้าพเจ้าได้ที่ <span class="text-thai-red">*</span></label>
+                                            <textarea id="leaveContact" rows="3" required placeholder="ระบุที่อยู่หรือเบอร์โทรศัพท์ที่สามารถติดต่อได้ระหว่างลา..." class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:border-thai-blue outline-none"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- 4. Teacher Specific: Substitute Teacher & Handover Class Schedule -->
+                                    <div class="p-5 rounded-2xl bg-gradient-to-br from-red-50/60 via-white to-indigo-50/60 border border-slate-200 space-y-4">
+                                        <div class="flex items-center justify-between">
+                                            <h4 class="font-bold text-thai-blue text-sm flex items-center gap-2">
+                                                <i class="fa-solid fa-chalkboard-user text-thai-red"></i>
+                                                การมอบหมายงานสอนและครูผู้สอนแทน (ระเบียบปฏิบัติสถานศึกษา)
+                                            </h4>
+                                            <span class="text-[11px] bg-thai-blue text-white px-2.5 py-0.5 rounded-full">สำคัญสำหรับครูผู้สอน</span>
+                                        </div>
+
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-xs font-semibold text-slate-600 mb-1">เลือกครูผู้รับมอบหมายสอนแทน / ปฏิบัติงานแทน</label>
+                                                <select id="substituteTeacher" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm bg-white focus:border-thai-blue outline-none">
+                                                    <option value="ไม่มีคาบสอนในวันที่ลา / มอบหมายงานประจำ">ไม่มีคาบสอนในวันที่ลา / มอบหมายงานประจำ</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-semibold text-slate-600 mb-1">รายละเอียดคาบเรียน / งานที่ฝากปฏิบัติแทน</label>
+                                                <input type="text" id="classHandover" placeholder="ระบุวิชา ชั้นเรียน คาบเรียน หรือรายละเอียดงานที่มอบหมาย..." value="" class="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm bg-white focus:border-thai-blue outline-none">
+                                            </div>
+                                        </div>
+
+                                        <!-- Medical Certificate / Document Attachment Mock -->
+                                        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-slate-200/70">
+                                            <div class="flex items-center gap-2.5">
+                                                <input type="checkbox" id="hasMedCert" class="w-4 h-4 accent-thai-red rounded">
+                                                <label for="hasMedCert" class="text-xs font-medium text-slate-700 cursor-pointer">แนบไฟล์ใบรับรองแพทย์ / เอกสารราชการประกอบการลา (PDF, JPG)</label>
+                                            </div>
+                                            <span id="medCertWarning" class="hidden text-xs font-bold text-thai-red bg-red-100 px-3 py-1 rounded-lg">
+                                                <i class="fa-solid fa-triangle-exclamation mr-1"></i> ลาป่วยเกินเกณฑ์ ต้องแนบใบรับรองแพทย์!
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Submit Buttons -->
+                                    <div class="pt-4 flex flex-col sm:flex-row items-center justify-end gap-3">
+                                        <button type="button" onclick="previewCurrentForm()" class="w-full sm:w-auto px-5 py-3 rounded-xl border border-thai-blue text-thai-blue hover:bg-thai-blueLight font-semibold text-sm transition flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                            <span>ดูตัวอย่างแบบใบลา ก.ค.ศ.</span>
+                                        </button>
+                                        <button type="submit" class="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-thai-red to-red-600 hover:from-red-600 hover:to-thai-redDark text-white font-semibold text-sm shadow-lg hover:shadow-glow-red transition flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-paper-plane"></i>
+                                            <span>ลงลายมือชื่ออิเล็กทรอนิกส์และส่งใบลา</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Right 1 Col: Approval Chain & Real-time Quota Check -->
+                        <div class="space-y-6">
+                            <!-- Approval Workflow Card -->
+                            <div class="bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100">
+                                <h3 class="font-bold text-thai-blue text-base flex items-center gap-2 pb-4 border-b border-slate-100">
+                                    <i class="fa-solid fa-sitemap text-thai-red"></i>
+                                    สายการบังคับบัญชาและอนุมัติ
+                                </h3>
+                                <ol class="relative border-l-2 border-thai-blue/20 ml-3 mt-5 space-y-6">
+                                    <li class="ml-6">
+                                        <span class="absolute flex items-center justify-center w-7 h-7 bg-thai-red text-white rounded-full -left-3.5 ring-4 ring-white text-xs font-bold">1</span>
+                                        <h4 class="font-semibold text-sm text-thai-blue">ผู้ยื่นใบลา & ครูสอนแทน</h4>
+                                        <p class="text-xs text-slate-500 mt-0.5">ครูกานดา รักเรียน ส่งคำขอ และแจ้งครูผู้สอนแทนรับทราบ</p>
+                                    </li>
+                                    <li class="ml-6">
+                                        <span class="absolute flex items-center justify-center w-7 h-7 bg-thai-blue text-white rounded-full -left-3.5 ring-4 ring-white text-xs font-bold">2</span>
+                                        <h4 class="font-semibold text-sm text-thai-blue">หัวหน้ากลุ่มสาระฯ / งานบุคลากร</h4>
+                                        <p class="text-xs text-slate-500 mt-0.5">ตรวจสอบสถิติวันลาสะสม และความเห็นควรอนุญาต</p>
+                                    </li>
+                                    <li class="ml-6">
+                                        <span class="absolute flex items-center justify-center w-7 h-7 bg-emerald-600 text-white rounded-full -left-3.5 ring-4 ring-white text-xs font-bold">3</span>
+                                        <h4 class="font-semibold text-sm text-thai-blue">ผู้อำนวยการโรงเรียนบึงงามพัฒนา</h4>
+                                        <p class="text-xs text-slate-500 mt-0.5">นายวรายุท โพธิ์ลา (ผู้มีอำนาจสั่งอนุญาตตามระเบียบ ก.ค.ศ.)</p>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <!-- Personal Leave Summary Box -->
+                            <div class="bg-thai-blue text-white rounded-3xl p-6 shadow-futuristic relative overflow-hidden">
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-thai-red rounded-full filter blur-2xl opacity-25 pointer-events-none"></div>
+                                <h3 class="font-bold text-base flex items-center gap-2">
+                                    <i class="fa-solid fa-calculator text-thai-red"></i>
+                                    ตารางสถิติการลา (แนบใบลา)
+                                </h3>
+                                <p class="text-xs text-blue-200 mt-1">ระบบดึงสถิติอัตโนมัติตามแบบฟอร์มราชการ</p>
+
+                                <div class="mt-4 bg-white/10 rounded-2xl p-3.5 text-xs space-y-2.5 border border-white/15">
+                                    <div class="grid grid-cols-4 font-semibold text-blue-200 border-b border-white/10 pb-2">
+                                        <span>ประเภท</span>
+                                        <span class="text-center">ลามาแล้ว</span>
+                                        <span class="text-center">ลาครั้งนี้</span>
+                                        <span class="text-right">รวมเป็น</span>
+                                    </div>
+                                    <div class="grid grid-cols-4 items-center">
+                                        <span>ลาป่วย</span>
+                                        <span id="tablePastSick" class="text-center">2.0</span>
+                                        <span id="tableCurrSick" class="text-center font-bold text-amber-300">2.0</span>
+                                        <span id="tableTotalSick" class="text-right font-bold">4.0 วัน</span>
+                                    </div>
+                                    <div class="grid grid-cols-4 items-center">
+                                        <span>ลากิจส่วนตัว</span>
+                                        <span id="tablePastPersonal" class="text-center">3.0</span>
+                                        <span id="tableCurrPersonal" class="text-center font-bold text-amber-300">0.0</span>
+                                        <span id="tableTotalPersonal" class="text-right font-bold">3.0 วัน</span>
+                                    </div>
+                                    <div class="grid grid-cols-4 items-center">
+                                        <span>ลาคลอดบุตร</span>
+                                        <span class="text-center">0.0</span>
+                                        <span id="tableCurrMaternity" class="text-center font-bold text-amber-300">0.0</span>
+                                        <span id="tableTotalMaternity" class="text-right font-bold">0.0 วัน</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- ==========================================
+                     TAB 3: LEAVE HISTORY (ประวัติและติดตามใบลา)
+                     ========================================== -->
+                <section id="tab-history" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+                            <div>
+                                <h2 class="text-xl font-bold text-thai-blue flex items-center gap-2">
+                                    <i class="fa-solid fa-clock-rotate-left text-thai-red"></i>
+                                    ทะเบียนประวัติการลาและพิมพ์ใบลาอิเล็กทรอนิกส์
+                                </h2>
+                                <p class="text-xs text-slate-500 mt-0.5">สามารถกดดูแบบใบลาราชการและดาวน์โหลดเป็นไฟล์ PDF หรือส่งออกตารางเป็นไฟล์ Excel (.csv) ได้จริง</p>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button onclick="exportLeaveHistoryCSV()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-sm transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-excel"></i>
+                                    <span>ดาวน์โหลดรายงาน Excel (.csv)</span>
+                                </button>
+                                <select id="filterLeaveType" onchange="renderHistoryTable()" class="rounded-xl border border-slate-200 px-3 py-2 text-xs font-medium text-thai-blue outline-none">
+                                    <option value="all">ทุกประเภทการลา</option>
+                                    <option value="ลาป่วย">ลาป่วย</option>
+                                    <option value="ลากิจส่วนตัว">ลากิจส่วนตัว</option>
+                                    <option value="ลาคลอดบุตร">ลาคลอดบุตร</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto mt-4">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-xs uppercase text-slate-400">
+                                        <th class="py-3.5 px-4">รหัสใบลา</th>
+                                        <th class="py-3.5 px-4">ประเภท</th>
+                                        <th class="py-3.5 px-4">ช่วงวันที่ลา</th>
+                                        <th class="py-3.5 px-4">จำนวนวัน</th>
+                                        <th class="py-3.5 px-4">สาเหตุการลา</th>
+                                        <th class="py-3.5 px-4">ครูสอนแทน</th>
+                                        <th class="py-3.5 px-4">สถานะ</th>
+                                        <th class="py-3.5 px-4 text-right">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fullHistoryTable" class="divide-y divide-slate-100 text-sm">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     TAB 4: DIRECTOR APPROVAL (มุมมองผู้บริหารอนุมัติ)
+                     ========================================== -->
+                <section id="tab-approval" class="hidden space-y-6">
+                    <!-- Director Header Banner -->
+                    <div class="bg-gradient-to-r from-thai-blue to-indigo-950 text-white rounded-3xl p-6 shadow-futuristic border-l-8 border-thai-red flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-thai-red text-white text-xs font-semibold mb-2">
+                                <i class="fa-solid fa-user-tie"></i> ผู้อำนวยการโรงเรียนบึงงามพัฒนา : นายวรายุท โพธิ์ลา
+                            </div>
+                            <h2 class="text-xl sm:text-2xl font-bold">ศูนย์อนุมัติใบลาข้าราชการครู โรงเรียนบึงงามพัฒนา</h2>
+                            <p class="text-xs sm:text-sm text-blue-200 mt-1">ตรวจสอบสถิติวันลา ความพร้อมของครูสอนแทน และกดลงนามคำสั่งอนุญาตด้วยลายมือชื่ออิเล็กทรอนิกส์</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="approveAllPending()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-xs sm:text-sm px-5 py-3 rounded-2xl shadow-lg transition flex items-center gap-2 shrink-0">
+                                <i class="fa-solid fa-check-double"></i>
+                                <span>อนุมัติทุกรายการที่รออนุมัติ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pending Approval Cards List -->
+                    <div id="approvalCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Rendered dynamically by JS -->
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     TAB 4.5: STAFF MANAGEMENT (จัดการรายชื่อบุคลากร)
+                     ========================================== -->
+                <section id="tab-staff" class="hidden space-y-6">
+                    <!-- Director / Admin Configuration Card -->
+                    <div class="bg-gradient-to-r from-thai-blue via-thai-blueMid to-indigo-950 text-white rounded-3xl p-6 shadow-futuristic flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <span class="inline-block px-3 py-0.5 rounded-full bg-thai-red text-white text-xs font-semibold mb-2">ตั้งค่าสถานศึกษาและผู้บริหาร</span>
+                            <h2 class="text-xl sm:text-2xl font-bold">ทำเนียบบุคลากร โรงเรียนบึงงามพัฒนา</h2>
+                            <p class="text-xs sm:text-sm text-blue-200 mt-1">คุณสามารถเพิ่ม ลบ หรือแก้ไขรายชื่อข้าราชการครู และเปลี่ยนเป็นชื่อผู้ใช้งานปัจจุบันได้ทันที</p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                            <div>
+                                <label class="block text-[11px] text-blue-200">ผู้มีอำนาจอนุมัติการลา (ผอ.โรงเรียน)</label>
+                                <input type="text" id="directorNameInput" value="นายวรายุท โพธิ์ลา" class="mt-1 bg-white text-thai-blue font-bold text-sm px-3 py-1.5 rounded-xl outline-none w-56">
+                            </div>
+                            <button onclick="updateDirectorName()" class="bg-thai-red hover:bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow transition mt-2 sm:mt-4">
+                                <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกชื่อ ผอ.
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left 1 Col: Add / Edit Staff Form -->
+                        <div class="bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100 h-fit">
+                            <h3 id="staffFormTitle" class="font-bold text-thai-blue text-base flex items-center gap-2 pb-4 border-b border-slate-100">
+                                <i class="fa-solid fa-user-plus text-thai-red"></i>
+                                <span>เพิ่มรายชื่อข้าราชการครู / บุคลากร</span>
+                            </h3>
+
+                            <form id="staffForm" onsubmit="saveStaffMember(event)" class="space-y-4 mt-4">
+                                <input type="hidden" id="editStaffId" value="">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">คำนำหน้าและชื่อ-นามสกุล <span class="text-thai-red">*</span></label>
+                                    <input type="text" id="staffFullName" required placeholder="เช่น นางสาวสมหญิง ยิ่งเจริญ" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-thai-blue outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">ตำแหน่งและวิทยฐานะ <span class="text-thai-red">*</span></label>
+                                    <select id="staffPosition" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm bg-white focus:border-thai-blue outline-none">
+                                        <option value="ครูผู้ช่วย">1. ครูผู้ช่วย</option>
+                                        <option value="ครู (คศ.1)">2. ครู (คศ.1)</option>
+                                        <option value="ครูชำนาญการ (คศ.2)">3. ครูชำนาญการ (คศ.2)</option>
+                                        <option value="ครูชำนาญการพิเศษ (คศ.3)" selected>4. ครูชำนาญการพิเศษ (คศ.3)</option>
+                                        <option value="ครูเชี่ยวชาญ (คศ.4)">5. ครูเชี่ยวชาญ (คศ.4)</option>
+                                        <option value="รองผู้อำนวยการสถานศึกษา">6. รองผู้อำนวยการสถานศึกษา</option>
+                                        <option value="บุคลากรทางการศึกษาอื่น (38 ค.(2))">7. บุคลากรทางการศึกษาอื่น (38 ค.(2))</option>
+                                        <option value="พนักงานราชการ (ครูผู้สอน)">8. พนักงานราชการ (ครูผู้สอน)</option>
+                                        <option value="ครูอัตราจ้าง">9. ครูอัตราจ้าง</option>
+                                        <option value="ครูพี่เลี้ยงเด็ก">10. ครูพี่เลี้ยงเด็ก</option>
+                                        <option value="นักการภารโรง">11. นักการภารโรง</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">กลุ่มสาระการเรียนรู้ / ฝ่ายงาน <span class="text-thai-red">*</span></label>
+                                    <select id="staffDept" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm bg-white focus:border-thai-blue outline-none">
+                                        <option value="วิทยาศาสตร์และเทคโนโลยี">1. วิทยาศาสตร์และเทคโนโลยี</option>
+                                        <option value="คณิตศาสตร์">2. คณิตศาสตร์</option>
+                                        <option value="ภาษาไทย">3. ภาษาไทย</option>
+                                        <option value="ภาษาต่างประเทศ">4. ภาษาต่างประเทศ</option>
+                                        <option value="สังคมศึกษา ศาสนาและวัฒนธรรม">5. สังคมศึกษา ศาสนาและวัฒนธรรม</option>
+                                        <option value="สุขศึกษาและพลศึกษา">6. สุขศึกษาและพลศึกษา</option>
+                                        <option value="ศิลปะ / ดนตรี / นาฏศิลป์">7. ศิลปะ / ดนตรี / นาฏศิลป์</option>
+                                        <option value="การงานอาชีพ">8. การงานอาชีพ</option>
+                                        <option value="การศึกษาปฐมวัย">9. การศึกษาปฐมวัย</option>
+                                        <option value="งานบริหารทั่วไป / ธุรการ">10. งานบริหารทั่วไป / ธุรการ</option>
+                                        <option value="งานอาคารสถานที่และสิ่งแวดล้อม">11. งานอาคารสถานที่และสิ่งแวดล้อม</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">เบอร์โทรศัพท์ติดต่อ</label>
+                                    <input type="text" id="staffPhone" placeholder="เช่น 089-123-4567" class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm focus:border-thai-blue outline-none">
+                                </div>
+
+                                <div class="pt-2 flex gap-2">
+                                    <button type="submit" id="staffSubmitBtn" class="flex-1 bg-thai-red hover:bg-red-600 text-white font-semibold py-2.5 px-4 rounded-xl text-sm shadow transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-plus-circle"></i>
+                                        <span>บันทึกรายชื่อ (ซิงค์อัตโนมัติ)</span>
+                                    </button>
+                                    <button type="button" id="staffCancelEditBtn" onclick="resetStaffForm()" class="hidden px-4 py-2.5 rounded-xl bg-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-300 transition">
+                                        ยกเลิก
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Quick Bulk Add Box -->
+                            <div class="mt-6 pt-5 border-t border-slate-100">
+                                <label class="block text-xs font-bold text-thai-blue mb-1">
+                                    <i class="fa-solid fa-bolt text-amber-500 mr-1"></i> ป้อนรายชื่อครูหลายคนพร้อมกัน (บรรทัดละ 1 ชื่อ)
+                                </label>
+                                <textarea id="bulkStaffInput" rows="3" placeholder="พิมพ์รายชื่อครูบรรทัดละ 1 ท่าน เช่น&#10;นางสาวสมศรี มีสุข&#10;นายเก่งกาจ ชาติไทย" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs focus:border-thai-blue outline-none mt-1"></textarea>
+                                <button type="button" onclick="bulkAddStaff()" class="mt-2 w-full py-2 px-3 rounded-xl bg-thai-blueLight hover:bg-indigo-100 text-thai-blue font-semibold text-xs transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-users-line"></i>
+                                    <span>เพิ่มรายชื่อทั้งหมดลงในตารางทันที</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Right 2 Cols: Staff Directory Table -->
+                        <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+                                <div>
+                                    <h3 class="font-bold text-thai-blue text-base flex items-center gap-2">
+                                        <i class="fa-solid fa-address-book text-thai-blue"></i>
+                                        รายชื่อข้าราชการครูและบุคลากรทั้งหมด (<span id="totalStaffCountText">0</span> ท่าน)
+                                    </h3>
+                                    <p class="text-xs text-slate-500 mt-0.5">ทุกรายชื่อที่เพิ่มหรือแก้ไขจะถูก <strong>บันทึกออนไลน์อัตโนมัติ</strong> และดาวน์โหลดเก็บเป็นไฟล์ลงเครื่องได้จริง</p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <button onclick="exportStaffCSV()" class="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-3 py-1.5 rounded-xl border border-emerald-200 transition flex items-center gap-1" title="ดาวน์โหลดตารางรายชื่อครูเปิดใน Excel">
+                                        <i class="fa-solid fa-file-csv"></i> ดาวน์โหลด Excel รายชื่อครู
+                                    </button>
+                                    <button onclick="exportBackupJSON()" class="text-xs bg-slate-100 hover:bg-slate-200 text-thai-blue font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1" title="ดาวน์โหลดไฟล์สำรองข้อมูลทั้งระบบ (.json)">
+                                        <i class="fa-solid fa-download text-thai-blue"></i> สำรองไฟล์ (.json)
+                                    </button>
+                                    <label class="cursor-pointer text-xs bg-indigo-50 hover:bg-indigo-100 text-thai-blue font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1" title="นำเข้าไฟล์สำรองข้อมูลที่เคยดาวน์โหลดไว้">
+                                        <i class="fa-solid fa-upload"></i> นำเข้าไฟล์
+                                        <input type="file" accept=".json" onchange="importBackupJSON(event)" class="hidden">
+                                    </label>
+                                    <button onclick="clearAllSystemData()" class="text-xs bg-red-50 hover:bg-red-100 text-thai-red font-semibold px-3 py-1.5 rounded-xl transition flex items-center gap-1" title="ล้างข้อมูลทั้งหมดเป็นระบบเปล่า">
+                                        <i class="fa-solid fa-rotate-left"></i> ล้างข้อมูลใหม่
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto mt-4">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 text-xs uppercase text-slate-400">
+                                            <th class="py-3 px-3 text-center w-14">ลำดับ</th>
+                                            <th class="py-3 px-3">ชื่อ-นามสกุล</th>
+                                            <th class="py-3 px-3">ตำแหน่ง / วิทยฐานะ</th>
+                                            <th class="py-3 px-3">กลุ่มสาระฯ / ฝ่ายงาน</th>
+                                            <th class="py-3 px-3 text-right">จัดการ / สลับผู้ใช้</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="staffTableBody" class="divide-y divide-slate-100 text-sm">
+                                        <!-- Rendered by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==========================================
+                     TAB 5: G.K.S. REGULATIONS (ระเบียบการลา ก.ค.ศ.)
+                     ========================================== -->
+                <section id="tab-rules" class="hidden space-y-6">
+                    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-futuristic border border-slate-100">
+                        <div class="border-b border-slate-100 pb-5">
+                            <span class="text-xs font-bold text-thai-red uppercase tracking-wider">คู่มือกฎหมายและระเบียบปฏิบัติราชการ</span>
+                            <h2 class="text-xl sm:text-2xl font-bold text-thai-blue mt-1">สรุประเบียบ ก.ค.ศ. ว่าด้วยการลาของข้าราชการครูและบุคลากรทางการศึกษา</h2>
+                            <p class="text-xs sm:text-sm text-slate-500 mt-1">อ้างอิงระเบียบสำนักนายกรัฐมนตรีว่าด้วยการลาของข้าราชการ และหลักเกณฑ์ของสำนักงาน ก.ค.ศ. กระทรวงศึกษาธิการ</p>
+                        </div>
+
+                        <!-- 11 Types of Leave Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+                            
+                            <div class="p-5 rounded-2xl bg-slate-50 border-l-4 border-thai-red space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-thai-blue">1. การลาป่วย</h3>
+                                    <span class="text-xs font-bold text-thai-red bg-red-100 px-2.5 py-0.5 rounded-full">60 วันทำการ/ปี</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    • ส่งใบลาก่อนหรือในวันที่ลา ในกรณีจำเป็นส่งในวันแรกที่มาปฏิบัติราชการได้<br>
+                                    • <strong>ลาตั้งแต่ 30 วันขึ้นไป</strong> ต้องมีใบรับรองแพทย์<br>
+                                    • ได้รับเงินเดือนระหว่างลาไม่เกิน 60 วันทำการ (ผอ.เขต/ผู้มีอำนาจอนุมัติเพิ่มได้อีกไม่เกิน 60 วันทำการ)
+                                </p>
+                            </div>
+
+                            <div class="p-5 rounded-2xl bg-slate-50 border-l-4 border-thai-blue space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-thai-blue">2. การลากิจส่วนตัว</h3>
+                                    <span class="text-xs font-bold text-thai-blue bg-indigo-100 px-2.5 py-0.5 rounded-full">45 วันทำการ/ปี</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    • ต้องยื่นใบลาและ<strong>ได้รับอนุญาตก่อน</strong>จึงจะหยุดราชการได้ (เว้นแต่มีเหตุจำเป็นเร่งด่วน)<br>
+                                    • มีสิทธิได้รับเงินเดือนไม่เกิน 45 วันทำการ/ปีงบประมาณ (บรรจุปีแรกไม่เกิน 15 วันทำการ)<br>
+                                    • ลากิจเพื่อเลี้ยงดูบุตรต่อเนื่องจากลาคลอดได้อีกไม่เกิน 150 วันทำการ (โดยไม่รับเงินเดือน)
+                                </p>
+                            </div>
+
+                            <div class="p-5 rounded-2xl bg-slate-50 border-l-4 border-emerald-500 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-thai-blue">3. การลาคลอดบุตร</h3>
+                                    <span class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">90 วัน/ครั้ง</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    • ลาได้ครั้งละ 90 วัน (นับรวมวันหยุดราชการด้วย) โดย<strong>ไม่ต้องมีใบรับรองแพทย์</strong><br>
+                                    • จะลาในวันที่คลอด ก่อนหรือหลังวันที่คลอดก็ได้ แต่รวมกันไม่เกิน 90 วัน และได้รับเงินเดือนระหว่างลา
+                                </p>
+                            </div>
+
+                            <div class="p-5 rounded-2xl bg-slate-50 border-l-4 border-amber-500 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-thai-blue">4. ลาช่วยเหลือภริยาคลอดบุตร</h3>
+                                    <span class="text-xs font-bold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full">15 วันทำการ</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    • ข้าราชการชายลาไปช่วยเหลือภริยาโดยชอบด้วยกฎหมายที่คลอดบุตรได้ครั้งหนึ่งติดต่อกันไม่เกิน 15 วันทำการ<br>
+                                    • ต้องยื่นใบลาภายใน 90 วันนับแต่วันที่คลอดบุตร
+                                </p>
+                            </div>
+
+                            <div class="p-5 rounded-2xl bg-slate-50 border-l-4 border-purple-500 space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-thai-blue">5. การลาพักผ่อน (สายงานครู)</h3>
+                                    <span class="text-xs font-bold text-purple-700 bg-purple-100 px-2.5 py-0.5 rounded-full">ข้อกำหนดเฉพาะ</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    • ข้าราชการครูที่ปฏิบัติหน้าที่สอนประจำในสถานศึกษา <strong>ไม่มีสิทธิลาพักผ่อนประจำปี</strong> เนื่องจากมีวันหยุดภาคเรียน (ปิดเทอม) เกินกว่าวันลาพักผ่อนแล้ว<br>
+                                    • บุคลากรทางการศึกษาอื่น/ศึกษานิเทศก์ ที่ไม่มีปิดภาคเรียน มีสิทธิลาพักผ่อน 10 วันทำการ/ปี
+                                </p>
+                            </div>
+
+                            <div class="p-5 rounded-2xl bg-slate-50 border-l-4 border-thai-red space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-bold text-thai-blue">6. เกณฑ์การเลื่อนเงินเดือน ก.ค.ศ.</h3>
+                                    <span class="text-xs font-bold text-white bg-thai-red px-2.5 py-0.5 rounded-full">สำคัญมาก</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">
+                                    • ในครึ่งปีที่แล้วมา ต้องมีจำนวนครั้งของการ<strong>ลาป่วยและลากิจส่วนตัวรวมกันไม่เกิน 6 ครั้ง</strong> และมีจำนวนวันลารวมกัน<strong>ไม่เกิน 23 วันทำการ</strong><br>
+                                    • ต้องไม่มาสายเกิน 8 ครั้ง และไม่ขาดราชการโดยไม่มีเหตุผลอันสมควร
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-2 py-1.5 flex items-center justify-around shadow-2xl">
+        <button onclick="switchTab('dashboard')" id="mnav-dashboard" class="mnav-item flex flex-col items-center py-1 px-3 rounded-xl text-thai-red font-semibold">
+            <i class="fa-solid fa-chart-pie text-lg"></i>
+            <span class="text-[10px] mt-0.5">แดชบอร์ด</span>
+        </button>
+        <button onclick="switchTab('request')" id="mnav-request" class="mnav-item flex flex-col items-center py-1 px-3 rounded-xl text-slate-500">
+            <i class="fa-solid fa-paper-plane text-lg"></i>
+            <span class="text-[10px] mt-0.5">ยื่นใบลา</span>
+        </button>
+        <button onclick="switchTab('history')" id="mnav-history" class="mnav-item flex flex-col items-center py-1 px-3 rounded-xl text-slate-500">
+            <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+            <span class="text-[10px] mt-0.5">ประวัติ</span>
+        </button>
+        <button onclick="switchTab('approval')" id="mnav-approval" class="mnav-item relative flex flex-col items-center py-1 px-3 rounded-xl text-slate-500">
+            <i class="fa-solid fa-file-signature text-lg"></i>
+            <span class="text-[10px] mt-0.5">อนุมัติ</span>
+            <span id="pendingBadgeMobile" class="absolute top-0.5 right-2 w-4 h-4 rounded-full bg-thai-red text-white text-[9px] font-bold flex items-center justify-center">0</span>
+        </button>
+        <button onclick="switchTab('staff')" id="mnav-staff" class="mnav-item flex flex-col items-center py-1 px-3 rounded-xl text-slate-500">
+            <i class="fa-solid fa-users-gear text-lg"></i>
+            <span class="text-[10px] mt-0.5">บุคลากร</span>
+        </button>
+    </nav>
+
+    <!-- ==========================================
+         MODAL: OFFICIAL THAI GOVERNMENT LEAVE FORM PREVIEW (แบบใบลา ก.ค.ศ.)
+         ========================================== -->
+    <div id="officialFormModal" class="fixed inset-0 z-50 hidden bg-thai-blue/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 my-8 animate-pulse-once">
+            <!-- Modal Header -->
+            <div class="thai-flag-ribbon"></div>
+            <div class="px-6 py-4 bg-thai-blue text-white flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-file-contract text-thai-red text-xl"></i>
+                    <div>
+                        <h3 class="font-bold text-sm sm:text-base">แบบใบลาอิเล็กทรอนิกส์ (ตามแบบ ก.ค.ศ.)</h3>
+                        <p class="text-[11px] text-blue-200">เอกสารราชการลงลายมือชื่อดิจิทัล (e-Signature Verified)</p>
+                    </div>
+                </div>
+                <button onclick="closeOfficialModal()" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Official Paper Body (Printable & PDF Exportable Area) -->
+            <div id="printableLeavePaper" class="p-6 sm:p-8 space-y-4 text-xs sm:text-sm text-slate-800 max-h-[75vh] overflow-y-auto leading-relaxed bg-white">
+                <div class="text-center space-y-1 border-b border-slate-200 pb-4">
+                    <span class="inline-block px-3 py-0.5 rounded-md bg-slate-100 text-thai-blue font-bold text-xs">แบบใบลาป่วย ลาคลอดบุตร ลากิจส่วนตัว (ตามระเบียบ ก.ค.ศ.)</span>
+                    <h4 id="modalDocTitle" class="text-lg font-bold text-thai-blue">แบบใบลาข้าราชการครูและบุคลากรทางการศึกษา</h4>
+                    <p class="text-xs text-slate-500">เขียนที่ โรงเรียนบึงงามพัฒนา</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <p><strong>เรื่อง:</strong> ขออนุญาต<span id="modalLeaveType" class="text-thai-red font-bold">ลาป่วย</span></p>
+                    <p><strong>เรียน:</strong> ผู้อำนวยการโรงเรียนบึงงามพัฒนา</p>
+                    <p><strong>ข้าพเจ้า:</strong> <span id="modalApplicant">นางสาวกานดา รักเรียน</span></p>
+                    <p><strong>ตำแหน่ง:</strong> <span id="modalPosition">ครูชำนาญการพิเศษ (คศ.3)</span></p>
+                    <p><strong>สถานศึกษา:</strong> โรงเรียนบึงงามพัฒนา</p>
+                    <p><strong>เลขที่ใบลา:</strong> <span id="modalLeaveId" class="font-mono font-bold text-thai-blue">TL-2570-001</span></p>
+                </div>
+
+                <div class="space-y-2 px-1">
+                    <p>มีความประสงค์ขอ <strong id="modalTypeInline" class="text-thai-blue underline">ลาป่วย</strong> เนื่องจาก <span id="modalReason" class="italic text-slate-700">มีอาการไข้หวัดและพักรักษาตัวตามคำแนะนำแพทย์</span></p>
+                    <p>ตั้งแต่วันที่ <strong id="modalStartDate">16 พ.ย. 2569</strong> ถึงวันที่ <strong id="modalEndDate">17 พ.ย. 2569</strong> มีกำหนด <strong id="modalDays" class="text-thai-red">2</strong> วันทำการ</p>
+                    <p>ในระหว่างลาจะติดต่อข้าพเจ้าได้ที่: <span id="modalContact">โรงเรียนบึงงามพัฒนา</span></p>
+                    <p><strong>การมอบหมายครูสอนแทน/ปฏิบัติงานแทน:</strong> <span id="modalSubstitute" class="text-thai-blue font-semibold">ครูผู้สอนแทน</span> (<span id="modalHandover">ตามแผนการสอน</span>)</p>
+                </div>
+
+                <!-- Signatures Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-slate-200 text-center">
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                        <p class="text-[11px] text-slate-500">ลงชื่อผู้ยื่นใบลา (e-Signature)</p>
+                        <p id="modalSignScript" class="font-bold text-thai-blue text-sm mt-2 italic font-serif">~ กานดา รักเรียน ~</p>
+                        <p id="modalSignFullName" class="text-xs font-medium mt-1">(นางสาวกานดา รักเรียน)</p>
+                        <p class="text-[11px] text-emerald-600 mt-1"><i class="fa-solid fa-circle-check"></i> ยืนยันตัวตนดิจิทัลแล้ว</p>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-indigo-50/60 border border-indigo-200">
+                        <p class="text-[11px] text-slate-500">คำสั่งผู้อำนวยการสถานศึกษา</p>
+                        <p id="modalApprovalBadge" class="font-bold text-emerald-600 text-sm mt-2">[ อนุญาต ]</p>
+                        <p id="modalDirectorSignName" class="text-xs font-medium mt-1">(นายวรายุท โพธิ์ลา)</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">ผู้อำนวยการโรงเรียนบึงงามพัฒนา</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                <span class="text-xs text-slate-500"><i class="fa-solid fa-lock text-thai-blue mr-1"></i> ดาวน์โหลดเป็นไฟล์ .PDF หรือสั่งพิมพ์ออกกระดาษ A4 ได้จริง</span>
+                <div class="flex flex-wrap gap-2">
+                    <button id="btnDownloadPDF" onclick="downloadRealLeavePDF()" class="px-4 py-2 rounded-xl bg-thai-red text-white text-xs font-semibold hover:bg-red-700 transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>ดาวน์โหลดไฟล์ PDF จริง</span>
+                    </button>
+                    <button onclick="printOfficialLeaveForm()" class="px-4 py-2 rounded-xl bg-thai-blue text-white text-xs font-semibold hover:bg-thai-blueMid transition flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-print"></i>
+                        <span>พิมพ์ออกเครื่องปริ้นท์</span>
+                    </button>
+                    <button onclick="closeOfficialModal()" class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300 transition">
+                        ปิดหน้าต่าง
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 space-y-2.5 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- Application JavaScript -->
+    <script>
+        // --- State & 1 Sample Data (มีตัวอย่าง 1 รายการที่สามารถกดลบออกได้ทันที) ---
+        let currentRole = 'teacher'; // 'teacher' or 'director'
+        let directorName = 'นายวรายุท โพธิ์ลา';
+
+        // รายชื่อบุคลากรตัวอย่าง 1 ท่าน (กดปุ่มถังขยะลบออกได้ทันที)
+        let staffList = [
+            {
+                id: 'ST-SAMPLE-01',
+                name: 'นางสาวกานดา รักเรียน (ตัวอย่าง-ลบได้)',
+                position: 'ครูชำนาญการ (คศ.2)',
+                department: 'ภาษาไทย',
+                phone: '081-234-5678'
+            }
+        ];
+        let activeStaffId = 'ST-SAMPLE-01';
+
+        // ดึงข้อมูลที่บันทึกไว้ในเครื่อง (LocalStorage) ทันทีที่เปิดหน้าเว็บเพื่อความรวดเร็วและไม่สูญหาย
+        const LOCAL_STORAGE_KEY = 'TLEAVE_BUENGNGAM_STATE_V1';
+        function loadFromLocalCache() {
+            try {
+                const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                if (parsed && Array.isArray(parsed.staffList)) {
+                    staffList = parsed.staffList;
+                }
+                if (parsed && Array.isArray(parsed.leaveRecords)) {
+                    leaveRecords = parsed.leaveRecords;
+                }
+                if (parsed && parsed.directorName) {
+                    directorName = parsed.directorName;
+                }
+                if (parsed && parsed.activeStaffId) {
+                    activeStaffId = parsed.activeStaffId;
+                }
+                if (parsed && Array.isArray(parsed.deletedIdsList)) {
+                    window.deletedIdsList = parsed.deletedIdsList;
+                }
+            } catch (err) {
+                console.warn('Local cache load warning:', err);
+            }
+        }
+
+        function saveToLocalCache() {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
+                    directorName,
+                    activeStaffId,
+                    staffList,
+                    leaveRecords,
+                    deletedIdsList: window.deletedIdsList || [],
+                    savedAt: Date.now()
+                }));
+            } catch (err) {
+                console.warn('Local cache save warning:', err);
+            }
+        }
+
+        function getActiveTeacher() {
+            if (staffList.length === 0) return null;
+            return staffList.find(s => s.id === activeStaffId) || staffList[0];
+        }
+        
+        // ประวัติการลาตัวอย่าง 1 รายการ (กดปุ่มถังขยะลบออกได้ทันที)
+        let leaveRecords = [
+            {
+                id: 'TL-2570-001',
+                teacherName: 'นางสาวกานดา รักเรียน (ตัวอย่าง-ลบได้)',
+                position: 'ครูชำนาญการ (คศ.2)',
+                department: 'ภาษาไทย',
+                type: 'ลาป่วย',
+                startDate: '2026-11-13',
+                endDate: '2026-11-13',
+                days: 1,
+                reason: 'ตัวอย่างการยื่นใบลา (สามารถกดปุ่มถังขยะสีแดงด้านหลังเพื่อลบออกได้ทันที)',
+                contact: 'โรงเรียนบึงงามพัฒนา โทร. 081-234-5678',
+                substitute: 'มอบหมายใบงานให้นักเรียนค้นคว้า',
+                handover: 'ภาษาไทย ม.1/1 คาบที่ 2',
+                status: 'pending',
+                isMine: true
+            }
+        ];
+
+        // Regulation Hints Dictionary
+        const regulationHints = {
+            'ลาป่วย': '<strong>ระเบียบ ก.ค.ศ. (ลาป่วย):</strong> ส่งใบลาก่อนหรือในวันที่ลา หรือในวันแรกที่มาปฏิบัติราชการ <strong>หากลาตั้งแต่ 30 วันขึ้นไป ต้องมีใบรับรองแพทย์</strong> ได้รับเงินเดือนระหว่างลาปีละไม่เกิน 60 วันทำการ',
+            'ลากิจส่วนตัว': '<strong>ระเบียบ ก.ค.ศ. (ลากิจส่วนตัว):</strong> ต้องยื่นใบลาต่อผู้บังคับบัญชาและ<strong>ต้องได้รับอนุญาตก่อนจึงจะหยุดราชการได้</strong> มีสิทธิได้รับเงินเดือนปีละไม่เกิน 45 วันทำการ (ปีแรกที่บรรจุไม่เกิน 15 วันทำการ)',
+            'ลาคลอดบุตร': '<strong>ระเบียบ ก.ค.ศ. (ลาคลอดบุตร):</strong> ข้าราชการครูหญิงมีสิทธิลาคลอดบุตรครั้งละ <strong>90 วัน (นับรวมวันหยุดราชการ)</strong> โดยได้รับเงินเดือน และ<strong>ไม่ต้องมีใบรับรองแพทย์</strong>',
+            'ลาไปช่วยเหลือภริยาที่คลอดบุตร': '<strong>ระเบียบ ก.ค.ศ. (ลาช่วยเหลือภริยาคลอดบุตร):</strong> ลาได้ครั้งหนึ่งติดต่อกันไม่เกิน <strong>15 วันทำการ</strong> ต้องยื่นใบลาภายใน 90 วันนับแต่วันที่ภริยาคลอดบุตร',
+            'ลาพักผ่อน': '<strong>ข้อควรระวัง (สายงานการสอน):</strong> ข้าราชการครูที่สอนประจำในสถานศึกษา <strong>ไม่มีสิทธิลาพักผ่อนประจำปี</strong> เนื่องจากมีวันหยุดปิดภาคเรียนแล้ว (ยกเว้นบุคลากรทางการศึกษาอื่น/ผู้บริหารที่ไม่มีปิดภาคเรียน มีสิทธิลาได้ 10 วันทำการ)',
+            'ลาอุปสมบทหรือประกอบพิธีฮัจย์': '<strong>ระเบียบ ก.ค.ศ. (อุปสมบท/ฮัจย์):</strong> ต้องยื่นใบลาก่อนไม่น้อยกว่า <strong>60 วัน</strong> ได้รับเงินเดือนระหว่างลาไม่เกิน 120 วัน (ต้องรับราชการมาแล้วไม่น้อยกว่า 12 เดือน)',
+            'ลาศึกษาต่อ/ฝึกอบรม/ดูงาน': '<strong>ระเบียบ ก.ค.ศ. (ลาศึกษา/ฝึกอบรม):</strong> เป็นไปตามระเบียบ ก.ค.ศ. ว่าด้วยการลาไปศึกษา ฝึกอบรม ปฏิบัติการวิจัย หรือดูงาน ต้องทำสัญญาและได้รับอนุมัติจากผู้มีอำนาจตามมาตรา 53'
+        };
+
+        // --- Format Thai Date ---
+        function formatThaiDate(dateStr) {
+            if (!dateStr) return '-';
+            const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            const day = d.getDate();
+            const month = months[d.getMonth()];
+            const year = d.getFullYear() + 543;
+            return `${day} ${month} ${year}`;
+        }
+
+        // --- Switch Navigation Tabs ---
+        function switchTab(tabId) {
+            const tabs = ['dashboard', 'request', 'history', 'approval', 'staff', 'rules'];
+            const titles = {
+                'dashboard': 'แดชบอร์ดสรุปสิทธิการลา (ตามระเบียบ ก.ค.ศ.)',
+                'request': 'เขียนใบลาข้าราชการครูออนไลน์ (e-Leave Form)',
+                'history': 'ประวัติการลาและติดตามสถานะการอนุมัติ',
+                'approval': 'ศูนย์อนุมัติการลา (สำหรับผู้อำนวยการสถานศึกษา)',
+                'staff': 'จัดการรายชื่อบุคลากร โรงเรียนบึงงามพัฒนา',
+                'rules': 'คู่มือระเบียบการลาข้าราชการครูและบุคลากรทางการศึกษา'
+            };
+
+            tabs.forEach(t => {
+                const section = document.getElementById(`tab-${t}`);
+                const navBtn = document.getElementById(`nav-${t}`);
+                const mnavBtn = document.getElementById(`mnav-${t}`);
+
+                if (t === tabId) {
+                    section.classList.remove('hidden');
+                    if (navBtn) {
+                        navBtn.className = 'nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all bg-white text-thai-blue shadow-lg';
+                    }
+                    if (mnavBtn) {
+                        mnavBtn.className = 'mnav-item relative flex flex-col items-center py-1 px-3 rounded-xl text-thai-red font-semibold';
+                    }
+                } else {
+                    section.classList.add('hidden');
+                    if (navBtn) {
+                        navBtn.className = 'nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-sm font-medium text-blue-100 hover:bg-white/10 transition-all';
+                    }
+                    if (mnavBtn) {
+                        mnavBtn.className = 'mnav-item relative flex flex-col items-center py-1 px-3 rounded-xl text-slate-500';
+                    }
+                }
+            });
+
+            document.getElementById('pageTitle').textContent = titles[tabId] || 'ระบบลาออนไลน์ข้าราชการครู';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- Toggle Role (Teacher vs Director) ---
+        function toggleRole() {
+            if (currentRole === 'teacher') {
+                currentRole = 'director';
+                document.getElementById('sidebarName').textContent = directorName;
+                document.getElementById('sidebarPosition').textContent = 'ผู้อำนวยการโรงเรียนบึงงามพัฒนา';
+                document.getElementById('sidebarDept').textContent = 'ผู้บริหารสถานศึกษา';
+                document.getElementById('sidebarAvatar').src = 'https://placehold.co/100x100/241D4F/FFFFFF?text=ผอ';
+                document.getElementById('roleToggleBtn').innerHTML = '<span>มุมมอง ผอ.โรงเรียน</span><i class="fa-solid fa-chevron-right text-[10px]"></i>';
+                document.getElementById('mobileRoleLabel').textContent = 'โหมด: ผอ.';
+                switchTab('approval');
+                showToast(`สลับเป็นมุมมอง "${directorName} (ผอ.โรงเรียนบึงงามพัฒนา)" สำหรับพิจารณาอนุมัติใบลา`, 'info');
+            } else {
+                currentRole = 'teacher';
+                syncActiveTeacherUI();
+                document.getElementById('roleToggleBtn').innerHTML = '<span>มุมมองครูผู้สอน</span><i class="fa-solid fa-chevron-right text-[10px]"></i>';
+                document.getElementById('mobileRoleLabel').textContent = 'โหมด: ครู';
+                switchTab('dashboard');
+                showToast(`สลับเป็นมุมมองครูผู้สอน (${getActiveTeacher().name}) เรียบร้อยแล้ว`, 'info');
+            }
+        }
+
+        // --- Sync Active Teacher & Staff Directory ---
+        function syncActiveTeacherUI() {
+            const active = getActiveTeacher();
+
+            if (!active) {
+                if (currentRole === 'teacher') {
+                    document.getElementById('sidebarName').textContent = 'ยังไม่มีรายชื่อบุคลากร';
+                    document.getElementById('sidebarPosition').textContent = 'กดเมนู "จัดการรายชื่อบุคลากร"';
+                    document.getElementById('sidebarDept').textContent = 'โรงเรียนบึงงามพัฒนา';
+                    document.getElementById('sidebarAvatar').src = 'https://placehold.co/100x100/ED1C24/FFFFFF?text=ครู';
+                }
+                const heroNameEl = document.getElementById('heroTeacherName');
+                if (heroNameEl) heroNameEl.textContent = 'โรงเรียนบึงงามพัฒนา';
+
+                const appSelect = document.getElementById('applicantSelect');
+                if (appSelect) {
+                    appSelect.innerHTML = `<option value="">-- กรุณาเพิ่มรายชื่อครูที่เมนูบุคลากรก่อน --</option>`;
+                }
+                const appInfo = document.getElementById('applicantInfoText');
+                if (appInfo) {
+                    appInfo.textContent = 'ยังไม่ได้เลือกรายชื่อผู้ยื่นใบลา (กดปุ่ม + ด้านขวาเพื่อเพิ่มชื่อครู)';
+                }
+                const subSelect = document.getElementById('substituteTeacher');
+                if (subSelect) {
+                    subSelect.innerHTML = `<option value="ไม่มีคาบสอนในวันที่ลา / มอบหมายงานประจำ">ไม่มีคาบสอนในวันที่ลา / มอบหมายงานประจำ</option>`;
+                }
+                return;
+            }
+
+            const shortName = active.name.replace(/^(นาย|นางสาว|นาง|ว่าที่ ร.ต.)\s*/g, '');
+            const initials = shortName.substring(0, 2) || 'ครู';
+
+            if (currentRole === 'teacher') {
+                document.getElementById('sidebarName').textContent = active.name;
+                document.getElementById('sidebarPosition').textContent = active.position;
+                document.getElementById('sidebarDept').textContent = active.department;
+                document.getElementById('sidebarAvatar').src = `https://placehold.co/100x100/ED1C24/FFFFFF?text=${encodeURIComponent(initials)}`;
+            }
+
+            const heroNameEl = document.getElementById('heroTeacherName');
+            if (heroNameEl) heroNameEl.textContent = shortName;
+
+            const appSelect = document.getElementById('applicantSelect');
+            if (appSelect) {
+                appSelect.innerHTML = staffList.map((s, idx) => `<option value="${s.id}" ${s.id === active.id ? 'selected' : ''}>${idx + 1}. ${s.name} (${s.position})</option>`).join('');
+            }
+            const appInfo = document.getElementById('applicantInfoText');
+            if (appInfo) {
+                appInfo.textContent = `${active.position} • ${active.department}`;
+            }
+
+            // Populate Substitute Teacher Dropdown (exclude current applicant)
+            const subSelect = document.getElementById('substituteTeacher');
+            if (subSelect) {
+                const others = staffList.filter(s => s.id !== active.id);
+                subSelect.innerHTML = others.map((s, idx) => `<option value="${s.name} (${s.position})">${idx + 1}. ${s.name} (${s.position} - ${s.department})</option>`).join('') +
+                    `<option value="ไม่มีคาบสอนในวันที่ลา / มอบหมายงานประจำ">ไม่มีคาบสอนในวันที่ลา / มอบหมายงานประจำ</option>`;
+            }
+        }
+
+        function handleApplicantChange() {
+            const val = document.getElementById('applicantSelect').value;
+            if (!val) return;
+            activeStaffId = val;
+            currentRole = 'teacher';
+            refreshAllViews();
+            const active = getActiveTeacher();
+            if (active) {
+                showToast(`เปลี่ยนผู้ยื่นใบลาเป็น "${active.name}" เรียบร้อยแล้ว`, 'info');
+            }
+        }
+
+        function selectStaffAsActive(id) {
+            activeStaffId = id;
+            currentRole = 'teacher';
+            refreshAllViews();
+            const active = getActiveTeacher();
+            if (active) {
+                showToast(`สลับผู้ใช้งานปัจจุบันเป็น "${active.name}" เรียบร้อยแล้ว`, 'success');
+            }
+        }
+
+        function renderStaffDirectory() {
+            document.getElementById('staffCountBadge').textContent = staffList.length;
+            document.getElementById('totalStaffCountText').textContent = staffList.length;
+
+            const tbody = document.getElementById('staffTableBody');
+            if (staffList.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="py-12 text-center text-slate-400">
+                            <i class="fa-solid fa-user-plus text-2xl text-slate-300 mb-2 block"></i>
+                            ยังไม่มีรายชื่อบุคลากรในระบบ กรุณาเพิ่มรายชื่อจากฟอร์มด้านซ้ายมือ
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = staffList.map((s, index) => {
+                const isCurrent = s.id === activeStaffId;
+                return `
+                    <tr class="hover:bg-slate-50 transition ${isCurrent ? 'bg-indigo-50/50' : ''}">
+                        <td class="py-3.5 px-3 text-center">
+                            <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg ${isCurrent ? 'bg-thai-red text-white' : 'bg-slate-100 text-thai-blue'} font-bold text-xs">
+                                ${index + 1}
+                            </span>
+                        </td>
+                        <td class="py-3.5 px-3 font-semibold text-thai-blue">
+                            <div class="flex items-center gap-2">
+                                <span>${s.name}</span>
+                                ${isCurrent ? '<span class="text-[10px] bg-thai-red text-white px-2 py-0.5 rounded-full">ใช้งานอยู่</span>' : ''}
+                            </div>
+                        </td>
+                        <td class="py-3.5 px-3 text-xs text-slate-600">${s.position}</td>
+                        <td class="py-3.5 px-3 text-xs text-slate-600">${s.department}</td>
+                        <td class="py-3.5 px-3 text-right space-x-1">
+                            <button onclick="selectStaffAsActive('${s.id}')" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg ${isCurrent ? 'bg-emerald-600 text-white' : 'bg-thai-blueLight text-thai-blue hover:bg-thai-blue hover:text-white'} transition">
+                                <i class="fa-solid fa-user-check mr-1"></i> ${isCurrent ? 'กำลังใช้งาน' : 'เลือกใช้งาน'}
+                            </button>
+                            <button onclick="editStaffMember('${s.id}')" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800 transition" title="แก้ไขชื่อ/ตำแหน่ง">
+                                <i class="fa-solid fa-pen-to-square"></i> แก้ไข
+                            </button>
+                            <button onclick="deleteStaffMember('${s.id}')" class="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-red-100 text-slate-500 hover:text-thai-red transition" title="ลบรายชื่อ">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function saveStaffMember(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editStaffId').value;
+            const name = document.getElementById('staffFullName').value.trim();
+            const position = document.getElementById('staffPosition').value;
+            const department = document.getElementById('staffDept').value;
+            const phone = document.getElementById('staffPhone').value.trim() || '-';
+
+            if (!name) return;
+
+            if (editId) {
+                const target = staffList.find(s => s.id === editId);
+                if (target) {
+                    const oldName = target.name;
+                    target.name = name;
+                    target.position = position;
+                    target.department = department;
+                    target.phone = phone;
+                    leaveRecords.forEach(r => {
+                        if (r.teacherName === oldName) {
+                            r.teacherName = name;
+                            r.position = position;
+                            r.department = department;
+                        }
+                    });
+                    showToast(`แก้ไขและบันทึกข้อมูลของ "${name}" ออนไลน์เรียบร้อยแล้ว`, 'success');
+                }
+            } else {
+                const newId = 'ST-' + Date.now();
+                staffList.push({ id: newId, name, position, department, phone });
+                activeStaffId = newId;
+                showToast(`เพิ่มรายชื่อ "${name}" และล็อกข้อมูลถาวรเรียบร้อยแล้ว`, 'success');
+            }
+
+            window.hasLocalUnsavedChanges = true;
+            saveToLocalCache();
+            resetStaffForm();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData();
+        }
+
+        function bulkAddStaff() {
+            const raw = document.getElementById('bulkStaffInput').value.trim();
+            if (!raw) {
+                showToast('กรุณาพิมพ์รายชื่อครูอย่างน้อย 1 บรรทัดก่อนกดเพิ่ม', 'error');
+                return;
+            }
+            const defaultPos = document.getElementById('staffPosition').value;
+            const defaultDept = document.getElementById('staffDept').value;
+            const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+            lines.forEach((lineName, idx) => {
+                // ป้องกันชื่อซ้ำ
+                if (!staffList.some(s => s.name === lineName)) {
+                    const newId = 'ST-' + Date.now() + '-' + idx;
+                    staffList.push({
+                        id: newId,
+                        name: lineName,
+                        position: defaultPos,
+                        department: defaultDept,
+                        phone: '-'
+                    });
+                    if (!activeStaffId) activeStaffId = newId;
+                }
+            });
+
+            window.hasLocalUnsavedChanges = true;
+            saveToLocalCache();
+            document.getElementById('bulkStaffInput').value = '';
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData();
+            showToast(`เพิ่มรายชื่อบุคลากรจำนวน ${lines.length} ท่าน และล็อกข้อมูลถาวรสำเร็จ!`, 'success');
+        }
+
+        function clearAllSystemData() {
+            staffList = [];
+            leaveRecords = [];
+            activeStaffId = '';
+            window.hasLocalUnsavedChanges = true;
+            saveToLocalCache();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData({ forceOverwrite: true });
+            showToast('รีเซ็ตเป็นระบบเปล่าเรียบร้อยแล้ว พร้อมสำหรับป้อนรายชื่อจริงของโรงเรียนบึงงามพัฒนา', 'info');
+        }
+
+        // --- Helper for Real Browser File Download (Blob Based) ---
+        function triggerBlobDownload(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 300);
+        }
+
+        // 1. ดาวน์โหลดไฟล์สำรองข้อมูลทั้งระบบ (.json)
+        function exportBackupJSON() {
+            const payload = {
+                schoolName: 'โรงเรียนบึงงามพัฒนา',
+                directorName,
+                exportedAt: new Date().toISOString(),
+                staffList,
+                leaveRecords
+            };
+            const jsonString = JSON.stringify(payload, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8' });
+            triggerBlobDownload(blob, `ข้อมูลระบบลา_โรงเรียนบึงงามพัฒนา_${new Date().toISOString().slice(0,10)}.json`);
+            showToast('ดาวน์โหลดไฟล์สำรองข้อมูล (.json) ลงในอุปกรณ์เรียบร้อยแล้ว', 'success');
+        }
+
+        // 2. นำเข้าไฟล์สำรองข้อมูล (.json)
+        function importBackupJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (Array.isArray(data.staffList)) staffList = data.staffList;
+                    if (Array.isArray(data.leaveRecords)) leaveRecords = data.leaveRecords;
+                    if (data.directorName) {
+                        directorName = data.directorName;
+                        const dirInput = document.getElementById('directorNameInput');
+                        if (dirInput) dirInput.value = directorName;
+                    }
+                    activeStaffId = staffList.length > 0 ? staffList[0].id : '';
+                    refreshAllViews();
+                    if (window.persistSchoolData) window.persistSchoolData();
+                    showToast(`นำเข้าข้อมูลบุคลากร ${staffList.length} ท่าน และประวัติการลา ${leaveRecords.length} รายการสำเร็จ!`, 'success');
+                } catch (err) {
+                    showToast('รูปแบบไฟล์ไม่ถูกต้อง กรุณาเลือกไฟล์ .json ที่สำรองจากระบบนี้', 'error');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // 3. ดาวน์โหลดตารางรายชื่อบุคลากรเป็นไฟล์ Excel (.csv รองรับภาษาไทย UTF-8 BOM)
+        function exportStaffCSV() {
+            if (staffList.length === 0) {
+                showToast('ยังไม่มีรายชื่อบุคลากรให้ดาวน์โหลด กรุณาเพิ่มรายชื่อก่อนครับ', 'error');
+                return;
+            }
+            const headers = ['ลำดับที่', 'รหัสบุคลากร', 'ชื่อ-นามสกุล', 'ตำแหน่ง/วิทยฐานะ', 'กลุ่มสาระการเรียนรู้/ฝ่ายงาน', 'เบอร์โทรศัพท์', 'สถานศึกษา'];
+            const rows = staffList.map((s, idx) => [
+                idx + 1,
+                `"${s.id}"`,
+                `"${(s.name || '').replace(/"/g, '""')}"`,
+                `"${(s.position || '').replace(/"/g, '""')}"`,
+                `"${(s.department || '').replace(/"/g, '""')}"`,
+                `"${(s.phone || '-').replace(/"/g, '""')}"`,
+                '"โรงเรียนบึงงามพัฒนา"'
+            ]);
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            triggerBlobDownload(blob, `ทำเนียบบุคลากร_โรงเรียนบึงงามพัฒนา_${new Date().toISOString().slice(0,10)}.csv`);
+            showToast('ดาวน์โหลดไฟล์ Excel (.csv) รายชื่อบุคลากรลงในเครื่องเรียบร้อยแล้ว', 'success');
+        }
+
+        // 4. ดาวน์โหลดทะเบียนประวัติการลาทั้งหมดเป็นไฟล์ Excel (.csv รองรับภาษาไทย UTF-8 BOM)
+        function exportLeaveHistoryCSV() {
+            if (leaveRecords.length === 0) {
+                showToast('ยังไม่มีรายการใบลาในระบบให้ดาวน์โหลด', 'error');
+                return;
+            }
+            const headers = ['เลขที่ใบลา', 'ชื่อ-นามสกุลผู้ลา', 'ตำแหน่ง', 'กลุ่มสาระฯ/ฝ่ายงาน', 'ประเภทการลา', 'ตั้งแต่วันที่', 'ถึงวันที่', 'จำนวนวันทำการ', 'สาเหตุการลา', 'ครูผู้สอนแทน/ปฏิบัติงานแทน', 'งานที่มอบหมาย', 'สถานะการอนุมัติ', 'ผู้อนุมัติ'];
+            const statusMap = { 'approved': 'ผอ.อนุญาตแล้ว', 'pending': 'รอ ผอ.อนุมัติ', 'rejected': 'ไม่อนุญาต' };
+            const rows = leaveRecords.map(r => [
+                `"${r.id}"`,
+                `"${(r.teacherName || '').replace(/"/g, '""')}"`,
+                `"${(r.position || '').replace(/"/g, '""')}"`,
+                `"${(r.department || '').replace(/"/g, '""')}"`,
+                `"${(r.type || '').replace(/"/g, '""')}"`,
+                `"${formatThaiDate(r.startDate)}"`,
+                `"${formatThaiDate(r.endDate)}"`,
+                r.days,
+                `"${(r.reason || '').replace(/"/g, '""')}"`,
+                `"${(r.substitute || '').replace(/"/g, '""')}"`,
+                `"${(r.handover || '').replace(/"/g, '""')}"`,
+                `"${statusMap[r.status] || r.status}"`,
+                `"${directorName} (ผอ.โรงเรียนบึงงามพัฒนา)"`
+            ]);
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(e => e.join(','))].join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            triggerBlobDownload(blob, `ทะเบียนประวัติการลา_โรงเรียนบึงงามพัฒนา_${new Date().toISOString().slice(0,10)}.csv`);
+            showToast('ดาวน์โหลดไฟล์ Excel (.csv) ทะเบียนประวัติการลาลงในเครื่องเรียบร้อยแล้ว', 'success');
+        }
+
+        // 5. ดาวน์โหลดแบบใบลา ก.ค.ศ. เป็นไฟล์ PDF จริงลงในอุปกรณ์ (Real PDF File Generator)
+        async function downloadRealLeavePDF() {
+            const element = document.getElementById('printableLeavePaper');
+            const btn = document.getElementById('btnDownloadPDF');
+            const leaveId = document.getElementById('modalLeaveId').textContent || 'LeaveForm';
+            const applicant = document.getElementById('modalApplicant').textContent || 'ครู';
+
+            if (typeof html2pdf === 'undefined') {
+                printOfficialLeaveForm();
+                return;
+            }
+
+            const originalBtnHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>กำลังสร้างไฟล์ PDF...</span>';
+
+            // Temporarily expand max-height so full paper is captured cleanly
+            const prevMaxHeight = element.style.maxHeight;
+            const prevOverflow = element.style.overflow;
+            element.style.maxHeight = 'none';
+            element.style.overflow = 'visible';
+
+            const opt = {
+                margin:       [12, 12, 12, 12],
+                filename:     `ใบลา_${leaveId}_${applicant.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+                showToast(`ดาวน์โหลดไฟล์ "ใบลา_${leaveId}.pdf" ลงในเครื่องของคุณเรียบร้อยแล้ว!`, 'success');
+            } catch (err) {
+                console.error('PDF export error:', err);
+                showToast('เกิดข้อผิดพลาดในการสร้าง PDF ระบบกำลังสลับไปหน้าสั่งพิมพ์แทน', 'error');
+                printOfficialLeaveForm();
+            } finally {
+                element.style.maxHeight = prevMaxHeight;
+                element.style.overflow = prevOverflow;
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+            }
+        }
+
+        // 6. สั่งพิมพ์ใบลาราชการออกเครื่องปริ้นท์ (หรือ Save as PDF ผ่านหน้าต่างระบบ)
+        function printOfficialLeaveForm() {
+            const content = document.getElementById('printableLeavePaper').innerHTML;
+            const printWin = window.open('', '_blank', 'width=900,height=700');
+            if (!printWin) {
+                window.print();
+                return;
+            }
+            printWin.document.write(`
+                <!DOCTYPE html>
+                <html lang="th">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>แบบใบลาข้าราชการครู - โรงเรียนบึงงามพัฒนา</title>
+                    <script src="https://cdn.tailwindcss.com"><\/script>
+                    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Prompt', sans-serif; padding: 24px; color: #1E293B; }
+                        @media print { body { padding: 0; } }
+                    </style>
+                </head>
+                <body onload="setTimeout(() => { window.print(); }, 400)">
+                    <div class="max-w-2xl mx-auto border border-slate-300 rounded-2xl p-8">
+                        ${content}
+                    </div>
+                </body>
+                </html>
+            `);
+            printWin.document.close();
+        }
+
+        function editStaffMember(id) {
+            const s = staffList.find(item => item.id === id);
+            if (!s) return;
+            document.getElementById('editStaffId').value = s.id;
+            document.getElementById('staffFullName').value = s.name;
+            document.getElementById('staffPosition').value = s.position;
+            document.getElementById('staffDept').value = s.department;
+            document.getElementById('staffPhone').value = s.phone === '-' ? '' : s.phone;
+
+            document.getElementById('staffFormTitle').innerHTML = `<i class="fa-solid fa-user-pen text-amber-500"></i> <span>แก้ไขข้อมูล: ${s.name}</span>`;
+            document.getElementById('staffSubmitBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> <span>บันทึกการแก้ไข</span>`;
+            document.getElementById('staffCancelEditBtn').classList.remove('hidden');
+        }
+
+        function resetStaffForm() {
+            document.getElementById('editStaffId').value = '';
+            document.getElementById('staffFullName').value = '';
+            document.getElementById('staffPhone').value = '';
+            document.getElementById('staffFormTitle').innerHTML = `<i class="fa-solid fa-user-plus text-thai-red"></i> <span>เพิ่มรายชื่อข้าราชการครู / บุคลากร</span>`;
+            document.getElementById('staffSubmitBtn').innerHTML = `<i class="fa-solid fa-plus-circle"></i> <span>บันทึกรายชื่อ</span>`;
+            document.getElementById('staffCancelEditBtn').classList.add('hidden');
+        }
+
+        function deleteStaffMember(id) {
+            const target = staffList.find(s => s.id === id);
+            staffList = staffList.filter(s => s.id !== id);
+            if (!window.deletedIdsList) window.deletedIdsList = [];
+            window.deletedIdsList.push(id);
+            if (activeStaffId === id) {
+                activeStaffId = staffList.length > 0 ? staffList[0].id : '';
+            }
+            window.hasLocalUnsavedChanges = true;
+            saveToLocalCache();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData({ forceOverwrite: true });
+            showToast(`ลบรายชื่อ "${target ? target.name : ''}" และอัปเดตฐานข้อมูลแล้ว`, 'info');
+        }
+
+        function updateDirectorName() {
+            const val = document.getElementById('directorNameInput').value.trim();
+            if (!val) return;
+            directorName = val;
+            document.getElementById('modalDirectorSignName').textContent = `(${directorName})`;
+            if (currentRole === 'director') {
+                document.getElementById('sidebarName').textContent = directorName;
+            }
+            saveToLocalCache();
+            if (window.persistSchoolData) window.persistSchoolData();
+            showToast(`อัปเดตชื่อผู้อำนวยการผู้มีอำนาจอนุมัติเป็น "${directorName}" เรียบร้อยแล้ว`, 'success');
+        }
+
+        // --- Calculate Working Days & Update Quota Preview ---
+        function calculateDays() {
+            const startStr = document.getElementById('startDate').value;
+            const endStr = document.getElementById('endDate').value;
+            const period = document.getElementById('leavePeriod').value;
+            const type = document.getElementById('leaveType').value;
+
+            if (!startStr || !endStr) return 0;
+
+            const start = new Date(startStr);
+            const end = new Date(endStr);
+
+            if (end < start) {
+                document.getElementById('calculatedDaysBadge').textContent = 'วันที่ไม่ถูกต้อง';
+                return 0;
+            }
+
+            let count = 0;
+            let cur = new Date(start);
+            while (cur <= end) {
+                const dayOfWeek = cur.getDay();
+                // Maternity leave counts all calendar days; others count working days (Mon-Fri)
+                if (type === 'ลาคลอดบุตร') {
+                    count++;
+                } else if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+                    count++;
+                }
+                cur.setDate(cur.getDate() + 1);
+            }
+
+            if (period !== 'full' && count === 1) {
+                count = 0.5;
+            }
+
+            const unitLabel = type === 'ลาคลอดบุตร' ? 'วัน (รวมวันหยุด)' : 'วันทำการ';
+            document.getElementById('calculatedDaysBadge').textContent = `${count} ${unitLabel}`;
+
+            // Check 30 days sick leave medical certificate requirement
+            const medWarn = document.getElementById('medCertWarning');
+            if (type === 'ลาป่วย' && count >= 30) {
+                medWarn.classList.remove('hidden');
+            } else {
+                medWarn.classList.add('hidden');
+            }
+
+            updateLiveStatPreview(type, count);
+            return count;
+        }
+
+        function handleLeaveTypeChange() {
+            const type = document.getElementById('leaveType').value;
+            document.getElementById('regulationHintText').innerHTML = regulationHints[type] || '';
+            calculateDays();
+        }
+
+        function updateLiveStatPreview(type, currentRequestDays) {
+            const active = getActiveTeacher();
+            const myApproved = leaveRecords.filter(r => active && r.teacherName === active.name && r.status !== 'rejected');
+            const pastSick = myApproved.filter(r => r.type === 'ลาป่วย').reduce((s, r) => s + r.days, 0);
+            const pastPersonal = myApproved.filter(r => r.type === 'ลากิจส่วนตัว').reduce((s, r) => s + r.days, 0);
+
+            const currSick = type === 'ลาป่วย' ? currentRequestDays : 0;
+            const currPersonal = type === 'ลากิจส่วนตัว' ? currentRequestDays : 0;
+            const currMat = type === 'ลาคลอดบุตร' ? currentRequestDays : 0;
+
+            document.getElementById('tablePastSick').textContent = pastSick.toFixed(1);
+            document.getElementById('tableCurrSick').textContent = currSick.toFixed(1);
+            document.getElementById('tableTotalSick').textContent = (pastSick + currSick).toFixed(1) + ' วัน';
+
+            document.getElementById('tablePastPersonal').textContent = pastPersonal.toFixed(1);
+            document.getElementById('tableCurrPersonal').textContent = currPersonal.toFixed(1);
+            document.getElementById('tableTotalPersonal').textContent = (pastPersonal + currPersonal).toFixed(1) + ' วัน';
+
+            document.getElementById('tableCurrMaternity').textContent = currMat.toFixed(1);
+            document.getElementById('tableTotalMaternity').textContent = currMat.toFixed(1) + ' วัน';
+        }
+
+        // --- Submit Leave Request ---
+        function submitLeaveForm(e) {
+            e.preventDefault();
+            const active = getActiveTeacher();
+            if (!active) {
+                showToast('กรุณาเพิ่มรายชื่อบุคลากรที่เมนู "จัดการรายชื่อบุคลากร" ก่อนยื่นใบลา', 'error');
+                switchTab('staff');
+                return;
+            }
+
+            const days = calculateDays();
+            if (days <= 0) {
+                showToast('กรุณาเลือกช่วงวันที่ลาให้ถูกต้อง (ต้องไม่ตรงกับวันหยุดเสาร์-อาทิตย์ทั้งหมด)', 'error');
+                return;
+            }
+
+            const type = document.getElementById('leaveType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reason = document.getElementById('leaveReason').value;
+            const contact = document.getElementById('leaveContact').value;
+            const substitute = document.getElementById('substituteTeacher').value;
+            const handover = document.getElementById('classHandover').value || 'ตามแผนการจัดการเรียนรู้';
+
+            const newId = `TL-2570-${String(leaveRecords.length + 1).padStart(3, '0')}`;
+            const newRecord = {
+                id: newId,
+                teacherName: active.name,
+                position: active.position,
+                department: active.department,
+                type,
+                startDate,
+                endDate,
+                days,
+                reason,
+                contact,
+                substitute,
+                handover,
+                status: 'pending',
+                isMine: true
+            };
+
+            leaveRecords.unshift(newRecord);
+            document.getElementById('leaveReason').value = '';
+            saveToLocalCache();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData();
+            switchTab('history');
+            showToast(`ส่งใบลาเลขที่ ${newId} ในนาม "${active.name}" และบันทึกออนไลน์สำเร็จ!`, 'success');
+        }
+
+        // --- Render Tables & Cards ---
+        function getStatusBadge(status) {
+            if (status === 'approved') {
+                return `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>ผอ.อนุญาตแล้ว</span>`;
+            } else if (status === 'pending') {
+                return `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800"><span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>รอ ผอ.อนุมัติ</span>`;
+            } else {
+                return `<span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-red-100 text-thai-red">ไม่อนุมัติ</span>`;
+            }
+        }
+
+        function getTypeBadge(type) {
+            if (type === 'ลาป่วย') {
+                return `<span class="text-xs font-semibold text-thai-red bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg">${type}</span>`;
+            } else if (type === 'ลากิจส่วนตัว') {
+                return `<span class="text-xs font-semibold text-thai-blue bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">${type}</span>`;
+            } else {
+                return `<span class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">${type}</span>`;
+            }
+        }
+
+        function renderDashboardStatsAndRecent() {
+            const active = getActiveTeacher();
+            const myRecords = active ? leaveRecords.filter(r => r.teacherName === active.name) : leaveRecords;
+            const myApprovedOrPending = myRecords.filter(r => r.status !== 'rejected');
+
+            const sickRecs = myApprovedOrPending.filter(r => r.type === 'ลาป่วย');
+            const sickDays = sickRecs.reduce((s, r) => s + r.days, 0);
+
+            const personalRecs = myApprovedOrPending.filter(r => r.type === 'ลากิจส่วนตัว');
+            const personalDays = personalRecs.reduce((s, r) => s + r.days, 0);
+
+            const totalPromoDays = sickDays + personalDays;
+            const totalPromoTimes = sickRecs.length + personalRecs.length;
+
+            document.getElementById('statSickUsed').textContent = sickDays;
+            document.getElementById('statSickCount').textContent = sickRecs.length;
+            document.getElementById('statSickRemain').textContent = Math.max(0, 60 - sickDays);
+            document.getElementById('barSick').style.width = `${Math.min(100, (sickDays / 60) * 100)}%`;
+
+            document.getElementById('statPersonalUsed').textContent = personalDays;
+            document.getElementById('statPersonalCount').textContent = personalRecs.length;
+            document.getElementById('statPersonalRemain').textContent = Math.max(0, 45 - personalDays);
+            document.getElementById('barPersonal').style.width = `${Math.min(100, (personalDays / 45) * 100)}%`;
+
+            document.getElementById('statPromoDays').textContent = totalPromoDays;
+            document.getElementById('statPromoTimes').textContent = `${totalPromoTimes} / 6 ครั้ง`;
+            document.getElementById('barPromo').style.width = `${Math.min(100, (totalPromoDays / 23) * 100)}%`;
+
+            // Today's Leave & Substitute List on Dashboard
+            const todayCountBadge = document.getElementById('todayLeaveCountBadge');
+            const todayContainer = document.getElementById('todayLeaveListContainer');
+            const activeLeaves = leaveRecords.filter(r => r.status !== 'rejected');
+            if (todayCountBadge) todayCountBadge.textContent = `${activeLeaves.length} รายการ`;
+            if (todayContainer) {
+                if (activeLeaves.length === 0) {
+                    todayContainer.innerHTML = `
+                        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 text-center text-slate-400 text-xs">
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-xl mb-1.5 block"></i>
+                            วันนี้ไม่มีข้าราชการครูแจ้งลา<br>ปฏิบัติราชการครบทุกท่าน
+                        </div>
+                    `;
+                } else {
+                    todayContainer.innerHTML = activeLeaves.slice(0, 3).map(r => `
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-thai-blue text-white font-bold flex items-center justify-center text-xs">
+                                    ${r.teacherName.replace(/^(นาย|นางสาว|นาง)\s*/g, '').substring(0, 2)}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-thai-blue">${r.teacherName}</p>
+                                    <p class="text-xs text-slate-500">${r.type} • แทนโดย: <span class="text-thai-blue font-medium">${r.substitute}</span></p>
+                                </div>
+                            </div>
+                            <span class="text-[11px] font-semibold px-2 py-1 rounded-lg bg-red-100 text-thai-red">${r.days} วัน</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Recent Table on Dashboard
+            const tbody = document.getElementById('dashboardRecentTable');
+            if (myRecords.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-8 text-center text-slate-400 text-xs">
+                            ยังไม่มีประวัติการยื่นใบลาในระบบ
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            tbody.innerHTML = myRecords.slice(0, 5).map(r => `
+                <tr class="hover:bg-slate-50/80 transition">
+                    <td class="py-3.5 px-3 font-mono text-xs font-bold text-thai-blue">${r.id}</td>
+                    <td class="py-3.5 px-3">${getTypeBadge(r.type)}</td>
+                    <td class="py-3.5 px-3 text-xs text-slate-600">${formatThaiDate(r.startDate)} - ${formatThaiDate(r.endDate)}</td>
+                    <td class="py-3.5 px-3 font-semibold text-thai-blue">${r.days} วัน</td>
+                    <td class="py-3.5 px-3 text-xs text-slate-600">${r.substitute}</td>
+                    <td class="py-3.5 px-3">${getStatusBadge(r.status)}</td>
+                    <td class="py-3.5 px-3 text-right space-x-1">
+                        <button onclick="openOfficialModalById('${r.id}')" class="text-xs font-semibold text-thai-blue hover:text-thai-red bg-slate-100 hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
+                            <i class="fa-regular fa-file-lines mr-1"></i> ดูใบลา
+                        </button>
+                        <button onclick="deleteLeaveRecord('${r.id}')" class="text-xs font-semibold text-slate-500 hover:text-white bg-slate-100 hover:bg-thai-red px-2.5 py-1.5 rounded-lg transition" title="ลบรายการใบลานี้">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderHistoryTable() {
+            const filter = document.getElementById('filterLeaveType').value;
+            const myRecords = leaveRecords.filter(r => filter === 'all' || r.type === filter);
+            const tbody = document.getElementById('fullHistoryTable');
+
+            if (myRecords.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400">ยังไม่มีรายการใบลาในระบบ</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = myRecords.map(r => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-4 px-4 font-mono text-xs font-bold text-thai-blue">${r.id}</td>
+                    <td class="py-4 px-4">${getTypeBadge(r.type)}</td>
+                    <td class="py-4 px-4 text-xs text-slate-600">${formatThaiDate(r.startDate)} – ${formatThaiDate(r.endDate)}</td>
+                    <td class="py-4 px-4 font-bold text-thai-blue">${r.days} วัน</td>
+                    <td class="py-4 px-4 text-xs text-slate-600 max-w-xs truncate" title="${r.reason}">${r.reason}</td>
+                    <td class="py-4 px-4 text-xs text-slate-600">${r.substitute}</td>
+                    <td class="py-4 px-4">${getStatusBadge(r.status)}</td>
+                    <td class="py-4 px-4 text-right space-x-1">
+                        <button onclick="openOfficialModalById('${r.id}')" class="text-xs font-semibold bg-thai-blue text-white hover:bg-thai-red px-3 py-1.5 rounded-xl transition shadow-sm">
+                            <i class="fa-solid fa-print mr-1"></i> แบบ ก.ค.ศ.
+                        </button>
+                        <button onclick="deleteLeaveRecord('${r.id}')" class="text-xs font-semibold bg-red-50 text-thai-red hover:bg-thai-red hover:text-white px-2.5 py-1.5 rounded-xl transition" title="ลบใบลานี้">
+                            <i class="fa-solid fa-trash"></i> ลบ
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteLeaveRecord(id) {
+            const target = leaveRecords.find(r => r.id === id);
+            leaveRecords = leaveRecords.filter(r => r.id !== id);
+            if (!window.deletedIdsList) window.deletedIdsList = [];
+            window.deletedIdsList.push(id);
+            window.hasLocalUnsavedChanges = true;
+            saveToLocalCache();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData({ forceOverwrite: true });
+            showToast(`ลบรายการใบลาเลขที่ "${id}" (${target ? target.teacherName : ''}) เรียบร้อยแล้ว`, 'info');
+        }
+
+        function renderApprovalCards() {
+            const pendingList = leaveRecords.filter(r => r.status === 'pending');
+            const count = pendingList.length;
+
+            document.getElementById('pendingBadgeSidebar').textContent = count;
+            document.getElementById('pendingBadgeMobile').textContent = count;
+
+            const container = document.getElementById('approvalCardsContainer');
+            if (count === 0) {
+                container.innerHTML = `
+                    <div class="col-span-2 bg-white rounded-3xl p-12 text-center shadow-futuristic border border-slate-100">
+                        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mx-auto mb-3">
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-thai-blue">อนุมัติใบลาครบทุกรายการแล้ว</h3>
+                        <p class="text-xs text-slate-500 mt-1">ไม่มีใบลาค้างพิจารณาในขณะนี้</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = pendingList.map(r => `
+                <div class="bg-white rounded-3xl p-6 shadow-futuristic border border-slate-100 flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute top-0 left-0 bottom-0 w-1.5 bg-thai-blue"></div>
+                    <div>
+                        <div class="flex items-start justify-between gap-2 pb-4 border-b border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-11 h-11 rounded-2xl bg-thai-blue text-white font-bold flex items-center justify-center text-sm shadow">
+                                    ${r.teacherName.substring(0, 2)}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-thai-blue text-base">${r.teacherName}</h4>
+                                    <p class="text-xs text-slate-500">${r.position} • ${r.department}</p>
+                                </div>
+                            </div>
+                            ${getTypeBadge(r.type)}
+                        </div>
+
+                        <div class="mt-4 space-y-2 text-xs text-slate-700">
+                            <div class="flex justify-between py-1.5 px-3 rounded-xl bg-slate-50">
+                                <span class="text-slate-500">ช่วงวันที่ขอลา:</span>
+                                <span class="font-bold text-thai-blue">${formatThaiDate(r.startDate)} ถึง ${formatThaiDate(r.endDate)} (${r.days} วัน)</span>
+                            </div>
+                            <p><strong>สาเหตุการลา:</strong> ${r.reason}</p>
+                            <p><strong>ครูผู้สอนแทน:</strong> <span class="text-thai-blue font-semibold">${r.substitute}</span> (${r.handover})</p>
+                            <p class="text-emerald-700 font-medium"><i class="fa-solid fa-circle-check mr-1"></i> ตรวจสอบโควตา ก.ค.ศ.: อยู่ในเกณฑ์ปกติ ไม่กระทบเวลาเรียน</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openOfficialModalById('${r.id}')" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-thai-blue font-semibold text-xs transition">
+                                <i class="fa-regular fa-eye mr-1"></i> ดูแบบใบลา
+                            </button>
+                            <button onclick="deleteLeaveRecord('${r.id}')" class="px-2.5 py-2 rounded-xl bg-red-50 hover:bg-thai-red text-thai-red hover:text-white font-semibold text-xs transition" title="ลบใบลานี้">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="decideLeave('${r.id}', 'rejected')" class="px-4 py-2 rounded-xl border border-red-200 text-thai-red hover:bg-red-50 font-semibold text-xs transition">
+                                ไม่อนุญาต
+                            </button>
+                            <button onclick="decideLeave('${r.id}', 'approved')" class="px-5 py-2 rounded-xl bg-thai-blue hover:bg-thai-red text-white font-semibold text-xs shadow-md transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-signature"></i>
+                                <span>ลงนามอนุญาต</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function decideLeave(id, decision) {
+            const item = leaveRecords.find(r => r.id === id);
+            if (!item) return;
+            item.status = decision;
+            saveToLocalCache();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData();
+
+            if (decision === 'approved') {
+                showToast(`ลงนาม "อนุญาต" ใบลาของ ${item.teacherName} (${item.id}) เรียบร้อยแล้ว`, 'success');
+            } else {
+                showToast(`บันทึกผลการพิจารณา "ไม่อนุญาต" ใบลาเลขที่ ${item.id}`, 'error');
+            }
+        }
+
+        function approveAllPending() {
+            const pendingList = leaveRecords.filter(r => r.status === 'pending');
+            if (pendingList.length === 0) {
+                showToast('ไม่มีรายการค้างอนุมัติในขณะนี้', 'info');
+                return;
+            }
+            pendingList.forEach(r => r.status = 'approved');
+            saveToLocalCache();
+            refreshAllViews();
+            if (window.persistSchoolData) window.persistSchoolData();
+            showToast(`ลงนามอนุมัติใบลาทั้งหมด ${pendingList.length} รายการเรียบร้อยแล้ว`, 'success');
+        }
+
+        // --- Official Form Modal Functions ---
+        function openOfficialModalById(id) {
+            const rec = leaveRecords.find(r => r.id === id);
+            if (!rec) return;
+
+            document.getElementById('modalLeaveId').textContent = rec.id;
+            document.getElementById('modalLeaveType').textContent = rec.type;
+            document.getElementById('modalTypeInline').textContent = rec.type;
+            document.getElementById('modalApplicant').textContent = rec.teacherName;
+            document.getElementById('modalPosition').textContent = rec.position;
+            document.getElementById('modalSignScript').textContent = `~ ${rec.teacherName.replace(/^(นาย|นางสาว|นาง)\s*/g, '')} ~`;
+            document.getElementById('modalSignFullName').textContent = `(${rec.teacherName})`;
+            document.getElementById('modalDirectorSignName').textContent = `(${directorName})`;
+            document.getElementById('modalReason').textContent = rec.reason;
+            document.getElementById('modalStartDate').textContent = formatThaiDate(rec.startDate);
+            document.getElementById('modalEndDate').textContent = formatThaiDate(rec.endDate);
+            document.getElementById('modalDays').textContent = rec.days;
+            document.getElementById('modalContact').textContent = rec.contact;
+            document.getElementById('modalSubstitute').textContent = rec.substitute;
+            document.getElementById('modalHandover').textContent = rec.handover;
+
+            const badge = document.getElementById('modalApprovalBadge');
+            if (rec.status === 'approved') {
+                badge.textContent = '[ อนุญาต - ลงนามอิเล็กทรอนิกส์แล้ว ]';
+                badge.className = 'font-bold text-emerald-600 text-sm mt-2';
+            } else if (rec.status === 'pending') {
+                badge.textContent = '[ อยู่ระหว่างเสนอผู้อำนวยการพิจารณา ]';
+                badge.className = 'font-bold text-amber-600 text-sm mt-2';
+            } else {
+                badge.textContent = '[ ไม่อนุญาต ]';
+                badge.className = 'font-bold text-thai-red text-sm mt-2';
+            }
+
+            document.getElementById('officialFormModal').classList.remove('hidden');
+        }
+
+        function previewCurrentForm() {
+            const active = getActiveTeacher() || { name: '(ยังไม่ได้เลือกชื่อบุคลากร)', position: '-' };
+            const days = calculateDays();
+            document.getElementById('modalLeaveId').textContent = 'DRAFT-PREVIEW';
+            document.getElementById('modalLeaveType').textContent = document.getElementById('leaveType').value;
+            document.getElementById('modalTypeInline').textContent = document.getElementById('leaveType').value;
+            document.getElementById('modalApplicant').textContent = active.name;
+            document.getElementById('modalPosition').textContent = active.position;
+            document.getElementById('modalSignScript').textContent = `~ ${active.name.replace(/^(นาย|นางสาว|นาง)\s*/g, '')} ~`;
+            document.getElementById('modalSignFullName').textContent = `(${active.name})`;
+            document.getElementById('modalDirectorSignName').textContent = `(${directorName})`;
+            document.getElementById('modalReason').textContent = document.getElementById('leaveReason').value || '(ระบุสาเหตุการลา)';
+            document.getElementById('modalStartDate').textContent = formatThaiDate(document.getElementById('startDate').value);
+            document.getElementById('modalEndDate').textContent = formatThaiDate(document.getElementById('endDate').value);
+            document.getElementById('modalDays').textContent = days;
+            document.getElementById('modalContact').textContent = document.getElementById('leaveContact').value;
+            document.getElementById('modalSubstitute').textContent = document.getElementById('substituteTeacher').value;
+            document.getElementById('modalHandover').textContent = document.getElementById('classHandover').value;
+            document.getElementById('modalApprovalBadge').textContent = '[ ตัวอย่างก่อนส่งใบลา ]';
+            document.getElementById('modalApprovalBadge').className = 'font-bold text-thai-blue text-sm mt-2';
+
+            document.getElementById('officialFormModal').classList.remove('hidden');
+        }
+
+        function closeOfficialModal() {
+            document.getElementById('officialFormModal').classList.add('hidden');
+        }
+
+        // --- Toast Notification Helper ---
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let borderColor = 'border-thai-blue';
+            let iconHtml = '<i class="fa-solid fa-circle-info text-thai-blue text-lg"></i>';
+
+            if (type === 'success') {
+                borderColor = 'border-emerald-500';
+                iconHtml = '<i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>';
+            } else if (type === 'error') {
+                borderColor = 'border-thai-red';
+                iconHtml = '<i class="fa-solid fa-triangle-exclamation text-thai-red text-lg"></i>';
+            }
+
+            toast.className = `pointer-events-auto bg-white rounded-2xl p-4 shadow-2xl border-l-4 ${borderColor} flex items-start gap-3 transition-all duration-300`;
+            toast.innerHTML = `
+                ${iconHtml}
+                <div class="flex-1 text-xs font-medium text-slate-700 leading-relaxed">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                if (toast.parentElement) toast.remove();
+            }, 4500);
+        }
+
+        function refreshAllViews() {
+            syncActiveTeacherUI();
+            renderStaffDirectory();
+            renderDashboardStatsAndRecent();
+            renderHistoryTable();
+            renderApprovalCards();
+            calculateDays();
+        }
+
+        // โหลดข้อมูลที่บันทึกไว้ในเครื่องทันที
+        loadFromLocalCache();
+
+        // Initialize on Window Load
+        window.onload = function () {
+            refreshAllViews();
+        };
+    </script>
+
+    <!-- Cloud Persistence & Auto-Recovery Module (กู้คืนและผสานข้อมูลรายชื่อครูอัตโนมัติ ป้องกันข้อมูลหาย 100%) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const dotEl = document.getElementById('cloudStatusDot');
+        const textEl = document.getElementById('cloudStatusText');
+        window.deletedIdsList = window.deletedIdsList || [];
+        window.hasLocalUnsavedChanges = false;
+        let pendingSaveQueue = false;
+
+        function setCloudStatus(online, message) {
+            if (!dotEl || !textEl) return;
+            if (online) {
+                dotEl.className = "w-2 h-2 rounded-full bg-emerald-400";
+                textEl.textContent = message || "บันทึกข้อมูลออนไลน์อัตโนมัติแล้ว";
+            } else {
+                dotEl.className = "w-2 h-2 rounded-full bg-amber-400 animate-ping";
+                textEl.textContent = message || "กำลังซิงค์ข้อมูล...";
+            }
+        }
+
+        // ฟังก์ชันผสานรายชื่อครูโดยไม่ให้รายชื่อที่เพิ่งกรอกถูกเขียนทับ
+        function mergeStaffArrays(cloudArr, localArr) {
+            const map = new Map();
+            (cloudArr || []).forEach(item => {
+                if (item && item.id && !window.deletedIdsList.includes(item.id)) {
+                    map.set(item.name.trim(), item);
+                }
+            });
+            (localArr || []).forEach(item => {
+                if (item && item.id && !window.deletedIdsList.includes(item.id)) {
+                    // ถ้าเป็นชื่อตัวอย่าง แต่เรามีชื่อครูจริงอยู่แล้ว ไม่ต้องเอาชื่อตัวอย่างมาปน
+                    map.set(item.name.trim(), item);
+                }
+            });
+            return Array.from(map.values());
+        }
+
+        function mergeLeaveArrays(cloudArr, localArr) {
+            const map = new Map();
+            (cloudArr || []).forEach(item => {
+                if (item && item.id && !window.deletedIdsList.includes(item.id)) {
+                    map.set(item.id, item);
+                }
+            });
+            (localArr || []).forEach(item => {
+                if (item && item.id && !window.deletedIdsList.includes(item.id)) {
+                    map.set(item.id, item);
+                }
+            });
+            return Array.from(map.values());
+        }
+
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'buengngam-school-leave';
+                const app = initializeApp(firebaseConfig);
+                const auth = getAuth(app);
+                const db = getFirestore(app);
+
+                let currentUser = null;
+                let isApplyingSnapshot = false;
+
+                // 정의 persistSchoolData ทันที เพื่อให้หากผู้ใช้กดบันทึกตั้งแต่เปิดเว็บ ระบบจะจำคิวไว้ไม่ให้หาย
+                window.persistSchoolData = async (options = {}) => {
+                    if (!currentUser) {
+                        pendingSaveQueue = true;
+                        setCloudStatus(false, "จำข้อมูลไว้แล้ว กำลังเชื่อมต่อ...");
+                        return;
+                    }
+                    if (isApplyingSnapshot) return;
+
+                    const masterDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'schoolState', 'buengngamMasterV1');
+                    try {
+                        setCloudStatus(false, "กำลังบันทึกข้อมูล...");
+                        await setDoc(masterDocRef, {
+                            directorName: directorName,
+                            activeStaffId: activeStaffId,
+                            staffListJson: JSON.stringify(staffList),
+                            leaveRecordsJson: JSON.stringify(leaveRecords),
+                            deletedIdsJson: JSON.stringify(window.deletedIdsList || []),
+                            updatedAt: Date.now()
+                        });
+                        window.hasLocalUnsavedChanges = false;
+                        setCloudStatus(true, `บันทึกแล้ว (${staffList.length} รายชื่อ)`);
+                    } catch (err) {
+                        console.error("Save error:", err);
+                        setCloudStatus(false, "รอการเชื่อมต่อใหม่");
+                    }
+                };
+
+                const initAuth = async () => {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                };
+
+                await initAuth();
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (!user) return;
+                    currentUser = user;
+
+                    const masterDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'schoolState', 'buengngamMasterV1');
+                    const legacyRef1 = doc(db, 'artifacts', appId, 'public', 'data', 'schoolState', 'mainConfig');
+                    const legacyRef2 = doc(db, 'artifacts', appId, 'public', 'data', 'schoolState', 'cleanConfigV2');
+                    const legacyRef3 = doc(db, 'artifacts', appId, 'public', 'data', 'schoolState', 'sampleOneConfigV1');
+
+                    // กู้คืนข้อมูลจากทุกห้องเก่าที่ผู้ใช้เคยกรอกไว้ก่อนหน้านี้
+                    try {
+                        const [masterSnap, snap1, snap2, snap3] = await Promise.all([
+                            getDoc(masterDocRef),
+                            getDoc(legacyRef1),
+                            getDoc(legacyRef2),
+                            getDoc(legacyRef3)
+                        ]);
+
+                        let recoveredStaff = [];
+                        let recoveredLeaves = [];
+
+                        [snap1, snap2, snap3, masterSnap].forEach(s => {
+                            if (s && s.exists()) {
+                                const d = s.data();
+                                if (d.deletedIdsJson) {
+                                    try {
+                                        const del = JSON.parse(d.deletedIdsJson);
+                                        if (Array.isArray(del)) {
+                                            window.deletedIdsList = Array.from(new Set([...window.deletedIdsList, ...del]));
+                                        }
+                                    } catch (e) {}
+                                }
+                                if (d.staffListJson) {
+                                    try {
+                                        const arr = JSON.parse(d.staffListJson);
+                                        if (Array.isArray(arr)) recoveredStaff = mergeStaffArrays(recoveredStaff, arr);
+                                    } catch (e) {}
+                                }
+                                if (d.leaveRecordsJson) {
+                                    try {
+                                        const arr = JSON.parse(d.leaveRecordsJson);
+                                        if (Array.isArray(arr)) recoveredLeaves = mergeLeaveArrays(recoveredLeaves, arr);
+                                    } catch (e) {}
+                                }
+                                if (d.directorName) directorName = d.directorName;
+                            }
+                        });
+
+                        if (recoveredStaff.length > 0 || recoveredLeaves.length > 0) {
+                            staffList = mergeStaffArrays(recoveredStaff, staffList);
+                            leaveRecords = mergeLeaveArrays(recoveredLeaves, leaveRecords);
+                            if (staffList.length > 0 && !staffList.some(s => s.id === activeStaffId)) {
+                                activeStaffId = staffList[0].id;
+                            }
+                            refreshAllViews();
+                            await window.persistSchoolData();
+                        } else if (pendingSaveQueue || window.hasLocalUnsavedChanges) {
+                            await window.persistSchoolData();
+                            pendingSaveQueue = false;
+                        }
+                    } catch (recErr) {
+                        console.error("Recovery check error:", recErr);
+                    }
+
+                    // ติดตามการเปลี่ยนแปลงแบบเรียลไทม์โดยใช้ระบบ Merge (ไม่เขียนทับของใหม่)
+                    onSnapshot(masterDocRef, (snapshot) => {
+                        if (snapshot.exists()) {
+                            const data = snapshot.data();
+                            isApplyingSnapshot = true;
+
+                            if (data.deletedIdsJson) {
+                                try {
+                                    const del = JSON.parse(data.deletedIdsJson);
+                                    if (Array.isArray(del)) {
+                                        window.deletedIdsList = Array.from(new Set([...window.deletedIdsList, ...del]));
+                                    }
+                                } catch (e) {}
+                            }
+
+                            if (data.directorName) {
+                                directorName = data.directorName;
+                                const dirInput = document.getElementById('directorNameInput');
+                                if (dirInput) dirInput.value = directorName;
+                            }
+
+                            if (data.staffListJson) {
+                                try {
+                                    const cloudStaff = JSON.parse(data.staffListJson);
+                                    if (Array.isArray(cloudStaff)) {
+                                        staffList = window.hasLocalUnsavedChanges
+                                            ? mergeStaffArrays(cloudStaff, staffList)
+                                            : cloudStaff.filter(s => !window.deletedIdsList.includes(s.id));
+                                    }
+                                } catch (e) {}
+                            }
+
+                            if (data.leaveRecordsJson) {
+                                try {
+                                    const cloudLeaves = JSON.parse(data.leaveRecordsJson);
+                                    if (Array.isArray(cloudLeaves)) {
+                                        leaveRecords = window.hasLocalUnsavedChanges
+                                            ? mergeLeaveArrays(cloudLeaves, leaveRecords)
+                                            : cloudLeaves.filter(r => !window.deletedIdsList.includes(r.id));
+                                    }
+                                } catch (e) {}
+                            }
+
+                            if (data.activeStaffId && staffList.some(s => s.id === data.activeStaffId)) {
+                                activeStaffId = data.activeStaffId;
+                            } else if (staffList.length > 0) {
+                                activeStaffId = staffList[0].id;
+                            } else {
+                                activeStaffId = '';
+                            }
+
+                            saveToLocalCache();
+                            refreshAllViews();
+                            setCloudStatus(true, `ซิงค์ออนไลน์แล้ว (${staffList.length} รายชื่อ)`);
+                            isApplyingSnapshot = false;
+                        } else {
+                            window.persistSchoolData();
+                        }
+                    }, (error) => {
+                        console.error("Snapshot listener error:", error);
+                        setCloudStatus(false, "โหมดออฟไลน์");
+                    });
+                });
+            } else {
+                setCloudStatus(true, "พร้อมใช้งาน");
+            }
+        } catch (e) {
+            console.error("Cloud init error:", e);
+            setCloudStatus(true, "พร้อมใช้งาน");
+        }
+    </script>
+</body>
+</html>
